@@ -4,9 +4,6 @@ import {
   Users,
   Settings,
   Brain,
-  BarChart3,
-  FileText,
-  HelpCircle,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
@@ -33,9 +30,7 @@ const mainNav = [
 ];
 
 const secondaryNav = [
-  { title: "Reports", url: "/reports", icon: FileText },
   { title: "Settings", url: "/settings", icon: Settings },
-  { title: "Help & Support", url: "/help", icon: HelpCircle },
 ];
 
 export function AppSidebar() {
