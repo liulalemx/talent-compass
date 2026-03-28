@@ -4,6 +4,7 @@ import { Briefcase, ChevronRight, Plus } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getCases, StoredHiringCase } from "@/lib/hiringCaseStore";
+import { useSearch } from "@/lib/searchContext";
 
 const statusConfig = {
   draft: { label: "Draft", className: "bg-muted text-muted-foreground" },

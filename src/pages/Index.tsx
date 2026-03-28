@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCases, StoredHiringCase } from "@/lib/hiringCaseStore";
 import { api } from "@/lib/api";
+import { useSearch } from "@/lib/searchContext";
 
 const statusConfig = {
   draft: { label: "Draft", className: "bg-muted text-muted-foreground" },
