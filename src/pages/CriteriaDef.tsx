@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CheckCircle2, Loader2, Plus, X } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/lib/api";
+import { getCase, updateCase } from "@/lib/hiringCaseStore";
 
 interface CriterionItem {
   name: string;
@@ -18,17 +19,17 @@ interface CriterionItem {
 
 export default function CriteriaDef() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { id } = useParams<{ id: string }>();
   const { toast } = useToast();
 
-  const state = location.state as { criteria: any; jobDescription: string; jobTitle?: string } | null;
+  const storedCase = id ? getCase(id) : undefined;
+  const rawCriteria = storedCase?.criteria;
   const [loading, setLoading] = useState(false);
-  const [positionTitle, setPositionTitle] = useState(state?.jobTitle || "");
-  const [refinedReqs, setRefinedReqs] = useState(state?.jobDescription || "");
+  const [positionTitle, setPositionTitle] = useState(storedCase?.title || "");
+  const [refinedReqs, setRefinedReqs] = useState(storedCase?.jobDescription || "");
 
   const parseCriteria = (raw: any): CriterionItem[] => {
     if (!raw) return [];
-    // Handle { criteria_list: [{label, weight}, ...] } from /api/parse-jd
     if (raw.criteria_list && Array.isArray(raw.criteria_list)) {
       return raw.criteria_list.map((c: any, i: number) => ({
         name: c.label || c.name || c.criterion || `Criterion ${i + 1}`,
@@ -47,7 +48,7 @@ export default function CriteriaDef() {
     return [];
   };
 
-  const [criteria, setCriteria] = useState<CriterionItem[]>(() => parseCriteria(state?.criteria));
+  const [criteria, setCriteria] = useState<CriterionItem[]>(() => parseCriteria(rawCriteria));
 
   const updateCriterion = (index: number, field: keyof CriterionItem, value: string | number) => {
     setCriteria((prev) =>
@@ -64,9 +65,9 @@ export default function CriteriaDef() {
   };
 
   const resetCriteria = () => {
-    setCriteria(parseCriteria(state?.criteria));
-    setPositionTitle(state?.jobTitle || "");
-    setRefinedReqs(state?.jobDescription || "");
+    setCriteria(parseCriteria(rawCriteria));
+    setPositionTitle(storedCase?.title || "");
+    setRefinedReqs(storedCase?.jobDescription || "");
   };
 
   const handleApprove = async () => {
@@ -79,7 +80,14 @@ export default function CriteriaDef() {
         .join("\n");
       const fullCriteria = positionTitle ? `Position: ${positionTitle}\n${criteriaStr}` : criteriaStr;
       const result = await api.rankCandidates(fullCriteria);
-      navigate("/cases/case-1/candidates", { state: { candidates: result.candidate_scores, criteria } });
+      if (id) {
+        updateCase(id, {
+          status: "scored",
+          candidateCount: result.candidate_scores.length,
+          candidateResults: result.candidate_scores,
+        });
+      }
+      navigate(`/cases/${id}/candidates`);
     } catch (e: any) {
       toast({ title: "Error ranking candidates", description: e.message, variant: "destructive" });
     } finally {
@@ -87,7 +95,7 @@ export default function CriteriaDef() {
     }
   };
 
-  if (!state?.criteria) {
+  if (!rawCriteria) {
     return (
       <div className="p-6 lg:p-8 flex items-center justify-center h-[calc(100vh-3.5rem)]">
         <Card className="border-0 shadow-sm max-w-md">
@@ -111,7 +119,6 @@ export default function CriteriaDef() {
       </div>
 
       <div className="p-4 lg:p-6 space-y-5 flex-1 overflow-auto max-w-3xl mx-auto w-full">
-        {/* Position & Requirements */}
         <Card className="border-0 shadow-sm">
           <CardContent className="p-5 space-y-4">
             <div className="space-y-2">
@@ -138,7 +145,6 @@ export default function CriteriaDef() {
           </CardContent>
         </Card>
 
-        {/* Criteria Rows */}
         <Card className="border-0 shadow-sm">
           <CardContent className="p-5 space-y-3">
             <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -178,7 +184,6 @@ export default function CriteriaDef() {
           </CardContent>
         </Card>
 
-        {/* Actions */}
         <div className="flex gap-3 pb-4">
           <Button
             className="flex-1 rounded-xl"

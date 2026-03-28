@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,12 +8,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Search, GitCompareArrows, MapPin, Briefcase, Clock } from "lucide-react";
 import type { RankedCandidate } from "@/lib/api";
+import { getCase } from "@/lib/hiringCaseStore";
 
 export default function CandidateEval() {
-  const location = useLocation();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const state = location.state as { candidates: RankedCandidate[] } | null;
-  const candidates = state?.candidates || [];
+  const storedCase = id ? getCase(id) : undefined;
+  const candidates: RankedCandidate[] = storedCase?.candidateResults || [];
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [compareSet, setCompareSet] = useState<Set<number>>(new Set());
 
@@ -28,7 +29,7 @@ export default function CandidateEval() {
 
   const handleCompare = () => {
     const selected = Array.from(compareSet).map((i) => candidates[i]);
-    navigate("/cases/case-1/compare", { state: { candidates: selected } });
+    navigate(`/cases/${id}/compare`, { state: { candidates: selected } });
   };
 
   if (!candidates.length) {
@@ -50,7 +51,7 @@ export default function CandidateEval() {
 
   return (
     <div className="flex h-[calc(100vh-3.5rem)]">
-      {/* Left panel — candidate list */}
+      {/* Left panel */}
       <div className="w-80 lg:w-96 border-r border-border/60 flex flex-col">
         <div className="p-4 border-b border-border/60 space-y-3">
           <div>
@@ -58,21 +59,11 @@ export default function CandidateEval() {
             <p className="text-xs text-muted-foreground">{candidates.length} candidates scored</p>
           </div>
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="rounded-xl flex-1"
-              onClick={() => navigate("/cases/new")}
-            >
+            <Button variant="outline" size="sm" className="rounded-xl flex-1" onClick={() => navigate("/cases/new")}>
               <Search className="h-3.5 w-3.5" />
               New Search
             </Button>
-            <Button
-              size="sm"
-              className="rounded-xl flex-1"
-              disabled={compareSet.size < 2}
-              onClick={handleCompare}
-            >
+            <Button size="sm" className="rounded-xl flex-1" disabled={compareSet.size < 2} onClick={handleCompare}>
               <GitCompareArrows className="h-3.5 w-3.5" />
               Compare ({compareSet.size})
             </Button>
@@ -119,10 +110,9 @@ export default function CandidateEval() {
         </div>
       </div>
 
-      {/* Right panel — candidate detail */}
+      {/* Right panel */}
       <div className="flex-1 overflow-auto p-6 lg:p-8">
         <div className="max-w-2xl space-y-6">
-          {/* Header */}
           <div className="flex items-start gap-4">
             <Avatar className="h-14 w-14">
               <AvatarFallback className="bg-primary/10 text-primary text-lg font-semibold">
@@ -133,18 +123,15 @@ export default function CandidateEval() {
               <h2 className="text-xl font-semibold">{selected.full_name}</h2>
               <p className="text-sm text-muted-foreground">{selected.current_title}</p>
               <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
-                <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{selected.location}</span>
+                <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{selected.location || "Internal"}</span>
                 <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{selected.years_experience} yrs experience</span>
               </div>
             </div>
-            <Badge
-              className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 hover:bg-emerald-100 font-bold text-lg px-4 py-1.5"
-            >
+            <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 hover:bg-emerald-100 font-bold text-lg px-4 py-1.5">
               {selected.fit_score}
             </Badge>
           </div>
 
-          {/* Score bar */}
           <Card className="border-0 shadow-sm">
             <CardContent className="p-5 space-y-2">
               <div className="flex justify-between text-sm">
@@ -155,7 +142,6 @@ export default function CandidateEval() {
             </CardContent>
           </Card>
 
-          {/* Skills */}
           <Card className="border-0 shadow-sm">
             <CardContent className="p-5 space-y-3">
               <h3 className="text-sm font-semibold flex items-center gap-2">
@@ -163,10 +149,7 @@ export default function CandidateEval() {
               </h3>
               <div className="flex flex-wrap gap-2">
                 {selected.skills?.map((skill, j) => (
-                  <span
-                    key={j}
-                    className="text-xs bg-primary/10 text-primary border border-primary/20 px-2.5 py-1 rounded-md font-medium"
-                  >
+                  <span key={j} className="text-xs bg-primary/10 text-primary border border-primary/20 px-2.5 py-1 rounded-md font-medium">
                     {skill}
                   </span>
                 ))}
@@ -174,13 +157,10 @@ export default function CandidateEval() {
             </CardContent>
           </Card>
 
-          {/* AI Analysis */}
           <Card className="border-0 shadow-sm">
             <CardContent className="p-5 space-y-3">
               <h3 className="text-sm font-semibold">AI Trade-off Analysis</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {selected.tradeoff_reasoning}
-              </p>
+              <p className="text-sm leading-relaxed text-muted-foreground">{selected.tradeoff_reasoning}</p>
             </CardContent>
           </Card>
         </div>
