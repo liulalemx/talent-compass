@@ -35,7 +35,7 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">Good morning, Lisa.</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Hello there.</h1>
           <p className="text-muted-foreground text-sm">
             You have <span className="font-medium text-foreground">{activeCases} active cases</span> and{" "}
             <span className="font-medium text-foreground">{totalCandidates} candidates</span> to review.
