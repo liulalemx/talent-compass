@@ -30,7 +30,7 @@ export default function Candidates() {
     queryFn: () => api.listCandidates(),
   });
 
-  const candidates: ListCandidate[] = data?.candidates || [];
+  const candidates: ListCandidate[] = Array.isArray(data) ? data : [];
 
   const locations = useMemo(
     () => [...new Set(candidates.map((c) => c.location).filter(Boolean))],

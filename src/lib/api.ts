@@ -72,5 +72,5 @@ export const api = {
     post<RankResponse>("/api/rank-candidates", { criteria }),
 
   listCandidates: () =>
-    get<ListCandidatesResponse>("/api/list-candidates"),
+    get<ListCandidate[]>("/api/list-candidates"),
 };
