@@ -108,19 +108,6 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-3">
-        <div className="flex items-center gap-2.5 rounded-xl bg-accent/60 p-2.5">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback className="bg-primary text-primary-foreground text-xs font-medium">LM</AvatarFallback>
-          </Avatar>
-          {!collapsed && (
-            <div className="min-w-0">
-              <p className="text-[13px] font-medium truncate">Lisa Müller</p>
-              <p className="text-[11px] text-muted-foreground truncate">HR Director</p>
-            </div>
-          )}
-        </div>
-      </SidebarFooter>
     </Sidebar>
   );
 }

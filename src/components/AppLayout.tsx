@@ -21,12 +21,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 />
               </div>
             </div>
-            <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon" className="h-8 w-8 relative">
-                <Bell className="h-4 w-4" />
-                <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-primary" />
-              </Button>
-            </div>
+            <div />
           </header>
           <main className="flex-1 overflow-auto bg-background">{children}</main>
         </div>
