@@ -30,7 +30,6 @@ const mainNav = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Hiring Cases", url: "/cases", icon: Briefcase },
   { title: "Candidates", url: "/candidates", icon: Users },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
 ];
 
 const secondaryNav = [
