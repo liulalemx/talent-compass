@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/lib/api";
 
@@ -11,67 +13,71 @@ interface CriterionItem {
   name: string;
   weight: number;
   description?: string;
-  type?: string;
 }
-
-const typeColors: Record<string, string> = {
-  "must-have": "bg-destructive/10 text-destructive",
-  preferred: "bg-primary/10 text-primary",
-  behavioral: "bg-success/10 text-success",
-};
 
 export default function CriteriaDef() {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
 
-  const state = location.state as { criteria: any; jobDescription: string } | null;
+  const state = location.state as { criteria: any; jobDescription: string; jobTitle?: string } | null;
   const [loading, setLoading] = useState(false);
+  const [positionTitle, setPositionTitle] = useState(state?.jobTitle || "");
+  const [refinedReqs, setRefinedReqs] = useState(state?.jobDescription || "");
 
-  // Parse criteria from API response into a usable array
   const parseCriteria = (raw: any): CriterionItem[] => {
     if (!raw) return [];
-    // If the API returns an array directly
     if (Array.isArray(raw)) {
       return raw.map((c: any, i: number) => ({
         name: c.name || c.criterion || `Criterion ${i + 1}`,
-        weight: c.weight || Math.round(100 / raw.length),
+        weight: Math.min(10, Math.max(1, c.weight ? Math.round(c.weight / 10) : 5)),
         description: c.description || c.rationale || "",
-        type: c.type || "preferred",
       }));
     }
-    // If the API returns an object with criteria key
-    if (raw.criteria && Array.isArray(raw.criteria)) {
-      return parseCriteria(raw.criteria);
-    }
-    // If it's an object with named keys
+    if (raw.criteria && Array.isArray(raw.criteria)) return parseCriteria(raw.criteria);
     const entries = Object.entries(raw).filter(([k]) => k !== "urgency_score" && k !== "status");
     if (entries.length > 0) {
       return entries.map(([key, val]: [string, any]) => ({
         name: typeof val === "object" ? val.name || key : key,
-        weight: typeof val === "object" ? val.weight || Math.round(100 / entries.length) : Math.round(100 / entries.length),
+        weight: typeof val === "object" ? Math.min(10, Math.max(1, val.weight ? Math.round(val.weight / 10) : 5)) : 5,
         description: typeof val === "object" ? val.description || "" : String(val),
-        type: typeof val === "object" ? val.type || "preferred" : "preferred",
       }));
     }
     return [];
   };
 
   const [criteria, setCriteria] = useState<CriterionItem[]>(() => parseCriteria(state?.criteria));
-  const totalWeight = criteria.reduce((s, c) => s + c.weight, 0);
 
-  const updateWeight = (index: number, newWeight: number) => {
+  const updateCriterion = (index: number, field: keyof CriterionItem, value: string | number) => {
     setCriteria((prev) =>
-      prev.map((c, i) => (i === index ? { ...c, weight: newWeight } : c))
+      prev.map((c, i) => (i === index ? { ...c, [field]: value } : c))
     );
   };
 
+  const removeCriterion = (index: number) => {
+    setCriteria((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const addCriterion = () => {
+    setCriteria((prev) => [...prev, { name: "", weight: 5, description: "" }]);
+  };
+
+  const resetCriteria = () => {
+    setCriteria(parseCriteria(state?.criteria));
+    setPositionTitle(state?.jobTitle || "");
+    setRefinedReqs(state?.jobDescription || "");
+  };
+
   const handleApprove = async () => {
-    if (totalWeight !== 100) return;
+    if (criteria.length === 0) return;
     setLoading(true);
     try {
-      const criteriaStr = criteria.map((c) => `${c.name} (${c.weight}%): ${c.description}`).join("\n");
-      const result = await api.rankCandidates(criteriaStr);
+      const criteriaStr = criteria
+        .filter((c) => c.name.trim())
+        .map((c) => `${c.name} (Weight: ${c.weight}/10): ${c.description || ""}`)
+        .join("\n");
+      const fullCriteria = positionTitle ? `Position: ${positionTitle}\n${criteriaStr}` : criteriaStr;
+      const result = await api.rankCandidates(fullCriteria);
       navigate("/cases/case-1/candidates", { state: { candidates: result.candidate_scores, criteria } });
     } catch (e: any) {
       toast({ title: "Error ranking candidates", description: e.message, variant: "destructive" });
@@ -96,54 +102,94 @@ export default function CriteriaDef() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)]">
-      <div className="p-4 lg:p-5 border-b border-border/60 flex items-center justify-between">
-        <div>
-          <h2 className="font-semibold text-sm">Evaluation Criteria</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Total weight:{" "}
-            <span className={totalWeight === 100 ? "text-success font-semibold" : "text-destructive font-semibold"}>
-              {totalWeight}%
-            </span>
-            {totalWeight === 100 && " ✓"}
-          </p>
-        </div>
-        <Button onClick={handleApprove} disabled={totalWeight !== 100 || loading} className="rounded-xl">
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
-          {loading ? "Ranking…" : "Approve & Rank"}
-        </Button>
+      <div className="p-4 lg:p-5 border-b border-border/60">
+        <h2 className="font-semibold text-sm">Step 2: Verification & Weight Tuning</h2>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          Review and adjust criteria before executing the search
+        </p>
       </div>
 
-      <div className="p-4 lg:p-6 space-y-3 flex-1 overflow-auto max-w-3xl mx-auto w-full">
-        {criteria.map((c, i) => (
-          <Card key={i} className="border-0 shadow-sm">
-            <CardContent className="p-4 space-y-3">
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <h3 className="font-medium text-sm">{c.name}</h3>
-                  {c.description && (
-                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed line-clamp-2">{c.description}</p>
-                  )}
-                </div>
-                {c.type && (
-                  <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full shrink-0 ${typeColors[c.type] || "bg-muted text-muted-foreground"}`}>
-                    {c.type}
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-3">
-                <Slider
-                  value={[c.weight]}
-                  onValueChange={([v]) => updateWeight(i, v)}
-                  max={50}
-                  min={0}
-                  step={5}
-                  className="flex-1"
+      <div className="p-4 lg:p-6 space-y-5 flex-1 overflow-auto max-w-3xl mx-auto w-full">
+        {/* Position & Requirements */}
+        <Card className="border-0 shadow-sm">
+          <CardContent className="p-5 space-y-4">
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Target Position Title
+              </Label>
+              <Input
+                value={positionTitle}
+                onChange={(e) => setPositionTitle(e.target.value)}
+                placeholder="e.g. Senior Battery Engineer"
+                className="rounded-xl"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Refined Requirements (Optimized for Vector Search)
+              </Label>
+              <Textarea
+                value={refinedReqs}
+                onChange={(e) => setRefinedReqs(e.target.value)}
+                className="min-h-[100px] rounded-xl resize-y"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Criteria Rows */}
+        <Card className="border-0 shadow-sm">
+          <CardContent className="p-5 space-y-3">
+            <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Scoring Criteria & Weights (1–10)
+            </Label>
+
+            {criteria.map((c, i) => (
+              <div key={i} className="flex items-center gap-3 bg-muted/50 p-3 rounded-lg">
+                <Input
+                  value={c.name}
+                  onChange={(e) => updateCriterion(i, "name", e.target.value)}
+                  placeholder="Criterion name"
+                  className="flex-1 border-0 bg-transparent font-semibold text-sm focus-visible:ring-0 px-0"
                 />
-                <span className="text-sm font-semibold w-10 text-right tabular-nums">{c.weight}%</span>
+                <Input
+                  type="number"
+                  min={1}
+                  max={10}
+                  value={c.weight}
+                  onChange={(e) => updateCriterion(i, "weight", Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))}
+                  className="w-16 text-center rounded-lg font-bold text-primary"
+                />
+                <button
+                  onClick={() => removeCriterion(i)}
+                  className="text-destructive hover:text-destructive/80 transition-colors p-1"
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            ))}
+
+            <Button variant="outline" className="w-full rounded-xl mt-2" onClick={addCriterion}>
+              <Plus className="h-4 w-4" />
+              Add Custom Requirement
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Actions */}
+        <div className="flex gap-3 pb-4">
+          <Button
+            className="flex-1 rounded-xl"
+            onClick={handleApprove}
+            disabled={criteria.length === 0 || loading}
+          >
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
+            {loading ? "Searching…" : "Execute Search & Rank"}
+          </Button>
+          <Button variant="secondary" className="rounded-xl" onClick={resetCriteria}>
+            Reset
+          </Button>
+        </div>
       </div>
     </div>
   );
