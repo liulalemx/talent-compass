@@ -27,22 +27,22 @@ export default function CriteriaDef() {
 
   const parseCriteria = (raw: any): CriterionItem[] => {
     if (!raw) return [];
+    // Handle { criteria_list: [{label, weight}, ...] } from /api/parse-jd
+    if (raw.criteria_list && Array.isArray(raw.criteria_list)) {
+      return raw.criteria_list.map((c: any, i: number) => ({
+        name: c.label || c.name || c.criterion || `Criterion ${i + 1}`,
+        weight: Math.min(10, Math.max(1, c.weight || 5)),
+        description: c.description || c.rationale || "",
+      }));
+    }
     if (Array.isArray(raw)) {
       return raw.map((c: any, i: number) => ({
-        name: c.name || c.criterion || `Criterion ${i + 1}`,
-        weight: Math.min(10, Math.max(1, c.weight ? Math.round(c.weight / 10) : 5)),
+        name: c.label || c.name || c.criterion || `Criterion ${i + 1}`,
+        weight: Math.min(10, Math.max(1, c.weight || 5)),
         description: c.description || c.rationale || "",
       }));
     }
     if (raw.criteria && Array.isArray(raw.criteria)) return parseCriteria(raw.criteria);
-    const entries = Object.entries(raw).filter(([k]) => k !== "urgency_score" && k !== "status");
-    if (entries.length > 0) {
-      return entries.map(([key, val]: [string, any]) => ({
-        name: typeof val === "object" ? val.name || key : key,
-        weight: typeof val === "object" ? Math.min(10, Math.max(1, val.weight ? Math.round(val.weight / 10) : 5)) : 5,
-        description: typeof val === "object" ? val.description || "" : String(val),
-      }));
-    }
     return [];
   };
 

@@ -87,7 +87,13 @@ export default function CaseCreate() {
     try {
       const jd = buildJD();
       const criteria = await api.parseJD(jd);
-      navigate("/cases/case-1/criteria", { state: { criteria, jobDescription: jd, jobTitle } });
+      navigate("/cases/case-1/criteria", {
+        state: {
+          criteria,
+          jobDescription: criteria.detailed_jd || jd,
+          jobTitle: criteria.job_title || jobTitle,
+        },
+      });
     } catch (e: any) {
       toast({ title: "Error parsing JD", description: e.message, variant: "destructive" });
       setPhase("discovery");
