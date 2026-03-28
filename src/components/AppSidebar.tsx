@@ -2,7 +2,6 @@ import {
   LayoutDashboard,
   Briefcase,
   Users,
-  Settings,
   Brain,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
