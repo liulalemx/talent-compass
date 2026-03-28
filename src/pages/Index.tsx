@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCases, StoredHiringCase } from "@/lib/hiringCaseStore";
 import { api } from "@/lib/api";
+import { useSearch } from "@/lib/searchContext";
 
 const statusConfig = {
   draft: { label: "Draft", className: "bg-muted text-muted-foreground" },
@@ -27,12 +28,16 @@ const urgencyConfig = {
 export default function Dashboard() {
   const [cases, setCases] = useState<StoredHiringCase[]>([]);
   const [totalCandidates, setTotalCandidates] = useState(0);
+  const { query } = useSearch();
 
   useEffect(() => {
     setCases(getCases());
     api.listCandidates().then((list) => setTotalCandidates(list.length)).catch(() => {});
   }, []);
 
+  const filteredCases = cases.filter((c) =>
+    c.title.toLowerCase().includes(query.toLowerCase())
+  );
   const activeCases = cases.filter((c) => c.status !== "draft").length;
 
   return (
@@ -80,22 +85,26 @@ export default function Dashboard() {
         <div className="flex items-center justify-between">
           <h2 className="text-base font-medium">Hiring Cases</h2>
         </div>
-        {cases.length === 0 ? (
+        {filteredCases.length === 0 ? (
           <Card className="border-0 shadow-sm">
             <CardContent className="p-8 text-center space-y-3">
               <Briefcase className="h-10 w-10 text-muted-foreground/40 mx-auto" />
-              <p className="text-sm text-muted-foreground">No hiring cases yet. Create your first one to get started.</p>
-              <Button asChild variant="outline" className="rounded-xl">
-                <Link to="/cases/new">
-                  <Plus className="h-4 w-4" />
-                  New Hiring Case
-                </Link>
-              </Button>
+              <p className="text-sm text-muted-foreground">
+                {cases.length === 0 ? "No hiring cases yet. Create your first one to get started." : "No cases match your search."}
+              </p>
+              {cases.length === 0 && (
+                <Button asChild variant="outline" className="rounded-xl">
+                  <Link to="/cases/new">
+                    <Plus className="h-4 w-4" />
+                    New Hiring Case
+                  </Link>
+                </Button>
+              )}
             </CardContent>
           </Card>
         ) : (
           <div className="flex flex-col gap-3">
-            {cases.map((c) => {
+            {filteredCases.map((c) => {
               const st = statusConfig[c.status];
               const urg = urgencyConfig[c.urgency];
               return (

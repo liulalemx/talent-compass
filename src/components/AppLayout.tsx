@@ -1,10 +1,12 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Bell, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useSearch } from "@/lib/searchContext";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
+  const { query, setQuery } = useSearch();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -16,7 +18,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <div className="relative hidden sm:block">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
                 <Input
-                  placeholder="Search cases, candidates…"
+                  placeholder="Search cases…"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
                   className="pl-8 h-8 w-64 bg-muted/50 border-0 text-sm focus-visible:ring-1"
                 />
               </div>
