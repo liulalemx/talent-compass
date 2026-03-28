@@ -22,6 +22,12 @@ export interface RankedCandidate {
 export interface RankResponse {
   status: string;
   candidate_scores: RankedCandidate[];
+  suggest_external?: boolean;
+  recommendation_type?: "CRITICAL" | "STRATEGIC" | null;
+}
+
+export interface GenerateAdResponse {
+  ad_text: string;
 }
 
 async function post<T>(path: string, body: Record<string, any>): Promise<T> {
