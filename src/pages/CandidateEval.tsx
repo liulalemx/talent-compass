@@ -35,12 +35,19 @@ export default function CandidateEval() {
 
   if (!candidates.length) {
     return (
-      <div className="p-6 lg:p-8 flex items-center justify-center h-[calc(100vh-3.5rem)]">
-        <Card className="border-0 shadow-sm max-w-md">
+      <div className="p-6 lg:p-8 flex flex-col items-center justify-center h-[calc(100vh-3.5rem)] gap-6 max-w-2xl mx-auto">
+        {storedCase?.suggestExternal && storedCase.recommendationType && (
+          <ExternalSuggestionBanner
+            recommendationType={storedCase.recommendationType as "CRITICAL" | "STRATEGIC"}
+            caseTitle={storedCase.title}
+            jobDescription={storedCase.jobDescription || ""}
+          />
+        )}
+        <Card className="border-0 shadow-sm max-w-md w-full">
           <CardContent className="p-6 text-center space-y-3">
-            <h2 className="font-semibold">No Candidates Found</h2>
-            <p className="text-sm text-muted-foreground">Start by creating a hiring case and defining criteria.</p>
-            <Button onClick={() => navigate("/cases/new")} className="rounded-xl">Create Hiring Case</Button>
+            <h2 className="font-semibold">No Internal Candidates Found</h2>
+            <p className="text-sm text-muted-foreground">No internal matches were found for this role's criteria.</p>
+            <Button onClick={() => navigate("/cases/new")} className="rounded-xl">Create New Case</Button>
           </CardContent>
         </Card>
       </div>
