@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
 import Index from "./pages/Index";
+import HiringCases from "./pages/HiringCases";
+import Candidates from "./pages/Candidates";
 import CaseCreate from "./pages/CaseCreate";
 import CriteriaDef from "./pages/CriteriaDef";
 import CandidateEval from "./pages/CandidateEval";
