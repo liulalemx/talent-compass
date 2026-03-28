@@ -25,6 +25,7 @@ export default function CriteriaDef() {
   const storedCase = id ? getCase(id) : undefined;
   const rawCriteria = storedCase?.criteria;
   const [loading, setLoading] = useState(false);
+  const [urgency, setUrgency] = useState(5);
   const [positionTitle, setPositionTitle] = useState(storedCase?.title || "");
   const [refinedReqs, setRefinedReqs] = useState(storedCase?.jobDescription || "");
 
