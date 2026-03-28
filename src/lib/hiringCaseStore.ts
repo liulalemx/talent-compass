@@ -6,6 +6,9 @@ export interface StoredHiringCase {
   urgency: "low" | "medium" | "high";
   candidateCount: number;
   createdAt: string;
+  jobDescription?: string;
+  criteria?: any;
+  candidateResults?: any[];
 }
 
 const STORAGE_KEY = "hiring_cases";
@@ -25,6 +28,10 @@ function writeCases(cases: StoredHiringCase[]) {
 
 export function getCases(): StoredHiringCase[] {
   return readCases();
+}
+
+export function getCase(id: string): StoredHiringCase | undefined {
+  return readCases().find((c) => c.id === id);
 }
 
 export function addCase(c: Omit<StoredHiringCase, "id" | "createdAt">): StoredHiringCase {
