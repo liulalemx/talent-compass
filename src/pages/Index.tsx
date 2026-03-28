@@ -24,12 +24,6 @@ const urgencyConfig = {
   high: { label: "High", className: "text-destructive" },
 };
 
-const recentActivity = [
-  { id: 1, action: "Candidate scored", detail: "Dr. Elena Vasquez — 92/100", time: "2 hours ago", icon: UserCheck, color: "bg-primary/10 text-primary" },
-  { id: 2, action: "Criteria approved", detail: "Senior SW Engineering Manager", time: "Yesterday", icon: Target, color: "bg-accent text-accent-foreground" },
-  { id: 3, action: "New case created", detail: "Head of People Analytics", time: "3 days ago", icon: Briefcase, color: "bg-muted text-muted-foreground" },
-  { id: 4, action: "AI evaluation complete", detail: "8 candidates processed", time: "3 days ago", icon: Sparkles, color: "bg-primary/10 text-primary" },
-];
 
 export default function Dashboard() {
   const activeCases = hiringCases.filter((c) => c.status !== "draft").length;
