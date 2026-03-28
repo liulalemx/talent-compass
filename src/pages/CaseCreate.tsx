@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/lib/api";
+import { addCase } from "@/lib/hiringCaseStore";
 
 interface ChatMsg {
   role: "user" | "ai";
@@ -87,7 +88,14 @@ export default function CaseCreate() {
     try {
       const jd = buildJD();
       const criteria = await api.parseJD(jd);
-      navigate("/cases/case-1/criteria", {
+      const savedCase = addCase({
+        title: criteria.job_title || jobTitle || "Untitled Case",
+        department: "General",
+        status: "criteria_defined",
+        urgency: "medium",
+        candidateCount: 0,
+      });
+      navigate(`/cases/${savedCase.id}/criteria`, {
         state: {
           criteria,
           jobDescription: criteria.detailed_jd || jd,
