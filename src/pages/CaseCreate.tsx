@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Sparkles, FileText, Send, Bot, Loader2 } from "lucide-react";
+import { Sparkles, FileText, Send, Bot, Loader2, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,6 +18,8 @@ interface ChatMsg {
 export default function CaseCreate() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const [jobTitle, setJobTitle] = useState("");
+  const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [chatMessages, setChatMessages] = useState<ChatMsg[]>([]);
   const [chatInput, setChatInput] = useState("");
@@ -25,12 +27,21 @@ export default function CaseCreate() {
   const [loading, setLoading] = useState(false);
   const [phase, setPhase] = useState<"input" | "discovery" | "parsing">("input");
 
+  const buildJD = () => {
+    const parts: string[] = [];
+    if (jobTitle.trim()) parts.push(`Job Title: ${jobTitle.trim()}`);
+    if (location.trim()) parts.push(`Location: ${location.trim()}`);
+    if (description.trim()) parts.push(description.trim());
+    return parts.join("\n");
+  };
+
   const startDiscovery = async () => {
-    if (!description.trim()) return;
+    const jd = buildJD();
+    if (!jd.trim()) return;
     setPhase("discovery");
     setLoading(true);
     try {
-      const res = await api.chatDiscovery(description, []);
+      const res = await api.chatDiscovery(jd, []);
       if (res.status === "READY") {
         await parseAndNavigate();
       } else {
@@ -56,7 +67,7 @@ export default function CaseCreate() {
     setLoading(true);
 
     try {
-      const res = await api.chatDiscovery(description, newHistory);
+      const res = await api.chatDiscovery(buildJD(), newHistory);
       if (res.status === "READY") {
         setChatMessages((prev) => [...prev, { role: "ai", content: "Great, I have enough information. Generating criteria now..." }]);
         await parseAndNavigate();
@@ -74,8 +85,9 @@ export default function CaseCreate() {
   const parseAndNavigate = async () => {
     setPhase("parsing");
     try {
-      const criteria = await api.parseJD(description);
-      navigate("/cases/case-1/criteria", { state: { criteria, jobDescription: description } });
+      const jd = buildJD();
+      const criteria = await api.parseJD(jd);
+      navigate("/cases/case-1/criteria", { state: { criteria, jobDescription: jd, jobTitle } });
     } catch (e: any) {
       toast({ title: "Error parsing JD", description: e.message, variant: "destructive" });
       setPhase("discovery");
@@ -87,28 +99,60 @@ export default function CaseCreate() {
       <div className="p-6 lg:p-8 flex justify-center">
         <div className="w-full max-w-2xl space-y-8">
           <div className="space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight">Create Hiring Case</h1>
-            <p className="text-muted-foreground">Describe the role and let AI generate evaluation criteria</p>
+            <h1 className="text-2xl font-semibold tracking-tight">RapidResolve AI</h1>
+            <p className="text-muted-foreground">Multi-Agent Crisis Talent Acquisition & Decision Intelligence</p>
           </div>
           <Card className="border-0 shadow-sm">
             <CardContent className="p-6 lg:p-8 space-y-6">
-              <div className="space-y-2.5">
-                <Label htmlFor="description" className="flex items-center gap-2 text-sm font-medium">
-                  <FileText className="h-4 w-4 text-muted-foreground" />
-                  Job Description
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="jobTitle" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Job Title
+                  </Label>
+                  <Input
+                    id="jobTitle"
+                    placeholder="e.g. Senior Battery Engineer"
+                    className="rounded-xl border-border/60 focus-visible:ring-primary/30"
+                    value={jobTitle}
+                    onChange={(e) => setJobTitle(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="location" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Location / Plant
+                  </Label>
+                  <Input
+                    id="location"
+                    placeholder="e.g. Munich, Germany"
+                    className="rounded-xl border-border/60 focus-visible:ring-primary/30"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Detailed Requirements / Scenario
                 </Label>
                 <Textarea
                   id="description"
-                  placeholder="Paste or write the job description here…"
-                  className="min-h-[200px] resize-y rounded-xl border-border/60 focus-visible:ring-primary/30"
+                  placeholder="Paste or write the full job description, project context, or crisis scenario here…"
+                  className="min-h-[180px] resize-y rounded-xl border-border/60 focus-visible:ring-primary/30"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
+
               <div className="pt-2">
-                <Button size="lg" className="w-full rounded-xl shadow-sm" onClick={startDiscovery} disabled={!description.trim()}>
+                <Button
+                  size="lg"
+                  className="w-full rounded-xl shadow-sm"
+                  onClick={startDiscovery}
+                  disabled={!buildJD().trim()}
+                >
                   <Sparkles className="h-4 w-4" />
-                  Generate Criteria with AI
+                  Generate Intelligence Plan
                 </Button>
               </div>
             </CardContent>
@@ -127,9 +171,9 @@ export default function CaseCreate() {
             <Sparkles className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h2 className="font-semibold text-sm">AI Discovery</h2>
+            <h2 className="font-semibold text-sm">🔍 Role Discovery Chat</h2>
             <p className="text-xs text-muted-foreground">
-              {phase === "parsing" ? "Generating criteria from your description…" : "Refining your job requirements"}
+              {phase === "parsing" ? "Generating criteria from your description…" : "I'm reviewing your request. Let's make sure the search parameters are sharp."}
             </p>
           </div>
         </div>
@@ -139,8 +183,8 @@ export default function CaseCreate() {
         {chatMessages.map((msg, i) => (
           <div key={i} className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             {msg.role === "ai" && (
-              <Avatar className="h-7 w-7 shrink-0 mt-0.5">
-                <AvatarFallback className="bg-primary/10 text-primary text-[10px]">
+              <Avatar className="h-8 w-8 shrink-0 mt-0.5">
+                <AvatarFallback className="bg-card border border-border/60 text-primary text-[10px]">
                   <Bot className="h-3.5 w-3.5" />
                 </AvatarFallback>
               </Avatar>
@@ -148,30 +192,37 @@ export default function CaseCreate() {
             <div
               className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                 msg.role === "user"
-                  ? "bg-primary text-primary-foreground rounded-br-md"
-                  : "bg-card border border-border/60 text-foreground rounded-bl-md shadow-sm"
+                  ? "bg-primary text-primary-foreground rounded-tr-sm"
+                  : "bg-card border border-border/60 text-foreground rounded-tl-sm shadow-sm"
               }`}
             >
               {msg.content}
             </div>
+            {msg.role === "user" && (
+              <Avatar className="h-8 w-8 shrink-0 mt-0.5">
+                <AvatarFallback className="bg-primary text-primary-foreground text-[10px] font-medium">
+                  U
+                </AvatarFallback>
+              </Avatar>
+            )}
           </div>
         ))}
         {loading && (
           <div className="flex gap-2.5 justify-start">
-            <Avatar className="h-7 w-7 shrink-0 mt-0.5">
-              <AvatarFallback className="bg-primary/10 text-primary text-[10px]">
+            <Avatar className="h-8 w-8 shrink-0 mt-0.5">
+              <AvatarFallback className="bg-card border border-border/60 text-primary text-[10px]">
                 <Bot className="h-3.5 w-3.5" />
               </AvatarFallback>
             </Avatar>
-            <div className="bg-card border border-border/60 rounded-2xl rounded-bl-md px-4 py-2.5 shadow-sm">
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            <div className="bg-card border border-border/60 rounded-2xl rounded-tl-sm px-4 py-2.5 shadow-sm">
+              <p className="text-sm italic text-muted-foreground">Agent is analyzing your input...</p>
             </div>
           </div>
         )}
       </div>
 
       {phase === "discovery" && (
-        <div className="p-4 border-t border-border/60">
+        <div className="p-4 border-t border-border/60 space-y-3">
           <div className="flex gap-2">
             <Input
               placeholder="Answer the question…"
@@ -185,6 +236,15 @@ export default function CaseCreate() {
               <Send className="h-4 w-4" />
             </Button>
           </div>
+          <Button
+            variant="outline"
+            className="w-full rounded-xl"
+            onClick={parseAndNavigate}
+            disabled={loading}
+          >
+            <SkipForward className="h-4 w-4" />
+            Skip to Final Tuning
+          </Button>
         </div>
       )}
     </div>

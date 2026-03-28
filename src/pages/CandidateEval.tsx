@@ -1,19 +1,15 @@
-import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { GitCompareArrows, ChevronRight, AlertTriangle } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Search } from "lucide-react";
 import type { RankedCandidate } from "@/lib/api";
 
 export default function CandidateEval() {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state as { candidates: RankedCandidate[]; criteria?: any[] } | null;
+  const state = location.state as { candidates: RankedCandidate[] } | null;
   const candidates = state?.candidates || [];
-  const [selectedIdx, setSelectedIdx] = useState(0);
 
   if (!candidates.length) {
     return (
@@ -29,126 +25,60 @@ export default function CandidateEval() {
     );
   }
 
-  const selected = candidates[selectedIdx];
-
   return (
-    <div className="flex flex-col h-[calc(100vh-3.5rem)]">
-      {/* Top Bar */}
-      <div className="p-4 lg:px-6 border-b border-border/60 shrink-0">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h1 className="text-xl font-semibold">Ranked Candidates</h1>
-            <p className="text-sm text-muted-foreground">{candidates.length} candidates evaluated by AI</p>
-          </div>
-          {candidates.length > 1 && (
-            <Button variant="outline" className="rounded-xl" asChild>
-              <Link to="/cases/case-1/compare" state={{ candidates }}>
-                <GitCompareArrows className="h-4 w-4" />
-                Compare Candidates
-              </Link>
-            </Button>
-          )}
+    <div className="p-6 lg:p-8 max-w-3xl mx-auto space-y-6">
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-xl font-semibold">Final Talent Ranking</h1>
+          <p className="text-sm text-muted-foreground">
+            Intelligence scoring based on cross-referenced CV analysis and requirements.
+          </p>
         </div>
+        <Button variant="outline" className="rounded-xl" onClick={() => navigate("/cases/new")}>
+          <Search className="h-4 w-4" />
+          New Search
+        </Button>
       </div>
 
-      {/* Main */}
-      <div className="flex flex-1 min-h-0">
-        {/* List */}
-        <div className="w-full lg:w-[360px] border-r border-border/60 overflow-auto shrink-0">
-          {candidates.map((c, i) => (
-            <button
-              key={i}
-              onClick={() => setSelectedIdx(i)}
-              className={`w-full text-left p-4 border-b border-border/40 transition-all duration-150 hover:bg-accent/50 ${
-                i === selectedIdx ? "bg-accent/70" : ""
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Avatar className="h-9 w-9 shrink-0">
-                  <AvatarFallback className="bg-primary/10 text-primary text-[11px] font-medium">
-                    {c.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-0.5">
-                    <span className="font-medium text-sm truncate pr-2">{c.full_name}</span>
-                    <span className="text-base font-semibold text-primary tabular-nums">{c.fit_score}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground truncate">{c.current_title}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[11px] text-muted-foreground">
-                      {c.years_experience} yrs · {typeof c.location === "string" ? c.location.split(",")[0] : "N/A"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* Detail */}
-        <div className="flex-1 overflow-auto p-5 lg:p-6 space-y-5 hidden lg:block">
-          <div className="flex items-start justify-between">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-12 w-12">
-                <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                  {selected.full_name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-                </AvatarFallback>
-              </Avatar>
+      {/* Candidate Cards */}
+      {candidates.map((c, i) => (
+        <Card
+          key={i}
+          className="border-0 shadow-sm border-l-[6px] border-l-foreground/80 hover:shadow-md transition-all duration-200"
+        >
+          <CardContent className="p-5 space-y-3">
+            <div className="flex items-start justify-between gap-3">
               <div>
-                <h2 className="text-lg font-semibold">{selected.full_name}</h2>
+                <h3 className="font-semibold text-base">{c.full_name}</h3>
                 <p className="text-sm text-muted-foreground">
-                  {selected.current_title} · {selected.years_experience} years · {selected.location}
+                  {c.current_title} · {c.years_experience} yrs · {typeof c.location === "string" ? c.location : "N/A"}
                 </p>
               </div>
+              <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400 hover:bg-emerald-100 font-bold text-sm px-3 py-1">
+                {c.fit_score}
+              </Badge>
             </div>
-            <div className="text-right">
-              <span className="text-3xl font-bold text-primary">{selected.fit_score}</span>
-              <p className="text-xs text-muted-foreground">Fit Score</p>
-            </div>
-          </div>
 
-          {/* Fit Score Bar */}
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">AI Fit Score</span>
-                <span className="text-sm font-semibold text-primary tabular-nums">{selected.fit_score}/100</span>
+            {/* Skills */}
+            {c.skills && c.skills.length > 0 && (
+              <div className="flex flex-wrap gap-1.5">
+                {c.skills.map((skill, j) => (
+                  <span
+                    key={j}
+                    className="text-xs bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded"
+                  >
+                    {skill}
+                  </span>
+                ))}
               </div>
-              <Progress value={selected.fit_score} className="h-2" />
-            </CardContent>
-          </Card>
+            )}
 
-          {/* Tradeoff Reasoning */}
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex h-6 w-6 items-center justify-center rounded-md bg-warning/10">
-                  <AlertTriangle className="h-3.5 w-3.5 text-warning" />
-                </div>
-                <h3 className="font-medium text-sm">AI Analysis & Tradeoffs</h3>
-              </div>
-              <p className="text-sm leading-relaxed text-muted-foreground">{selected.tradeoff_reasoning}</p>
-            </CardContent>
-          </Card>
-
-          {/* Skills */}
-          {selected.skills && selected.skills.length > 0 && (
-            <Card className="border-0 shadow-sm">
-              <CardContent className="p-4">
-                <h3 className="font-medium text-sm mb-3">Key Skills</h3>
-                <div className="flex flex-wrap gap-2">
-                  {selected.skills.map((skill, i) => (
-                    <Badge key={i} variant="secondary" className="text-xs">
-                      {skill}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </div>
+            {/* Tradeoff */}
+            <p className="text-sm leading-relaxed text-muted-foreground">{c.tradeoff_reasoning}</p>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }
