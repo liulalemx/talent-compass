@@ -90,12 +90,12 @@
 
     --sidebar-background: 240 10% 8%;
     --sidebar-foreground: 240 5% 65%;
-    --sidebar-primary: 252 56% 62%;
+    --sidebar-primary: 213 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 252 20% 14%;
-    --sidebar-accent-foreground: 252 56% 80%;
+    --sidebar-accent: 213 30% 14%;
+    --sidebar-accent-foreground: 213 80% 75%;
     --sidebar-border: 240 5% 14%;
-    --sidebar-ring: 252 56% 62%;
+    --sidebar-ring: 213 100% 50%;
 
     --success: 152 60% 48%;
     --success-foreground: 0 0% 100%;
