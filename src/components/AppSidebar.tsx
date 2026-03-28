@@ -28,9 +28,6 @@ const mainNav = [
   { title: "Candidates", url: "/candidates", icon: Users },
 ];
 
-const secondaryNav = [
-  { title: "Settings", url: "/settings", icon: Settings },
-];
 
 export function AppSidebar() {
   const { state } = useSidebar();
