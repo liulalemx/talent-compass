@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Search, GitCompareArrows, MapPin, Briefcase, Clock } from "lucide-react";
 import type { RankedCandidate } from "@/lib/api";
 import { getCase } from "@/lib/hiringCaseStore";
+import ExternalSuggestionBanner from "@/components/ExternalSuggestionBanner";
 
 export default function CandidateEval() {
   const { id } = useParams<{ id: string }>();
@@ -34,12 +35,19 @@ export default function CandidateEval() {
 
   if (!candidates.length) {
     return (
-      <div className="p-6 lg:p-8 flex items-center justify-center h-[calc(100vh-3.5rem)]">
-        <Card className="border-0 shadow-sm max-w-md">
+      <div className="p-6 lg:p-8 flex flex-col items-center justify-center h-[calc(100vh-3.5rem)] gap-6 max-w-2xl mx-auto">
+        {storedCase?.suggestExternal && storedCase.recommendationType && (
+          <ExternalSuggestionBanner
+            recommendationType={storedCase.recommendationType as "CRITICAL" | "STRATEGIC"}
+            caseTitle={storedCase.title}
+            jobDescription={storedCase.jobDescription || ""}
+          />
+        )}
+        <Card className="border-0 shadow-sm max-w-md w-full">
           <CardContent className="p-6 text-center space-y-3">
-            <h2 className="font-semibold">No Candidates Found</h2>
-            <p className="text-sm text-muted-foreground">Start by creating a hiring case and defining criteria.</p>
-            <Button onClick={() => navigate("/cases/new")} className="rounded-xl">Create Hiring Case</Button>
+            <h2 className="font-semibold">No Internal Candidates Found</h2>
+            <p className="text-sm text-muted-foreground">No internal matches were found for this role's criteria.</p>
+            <Button onClick={() => navigate("/cases/new")} className="rounded-xl">Create New Case</Button>
           </CardContent>
         </Card>
       </div>
@@ -113,6 +121,13 @@ export default function CandidateEval() {
       {/* Right panel */}
       <div className="flex-1 overflow-auto p-6 lg:p-8">
         <div className="max-w-2xl space-y-6">
+          {storedCase?.suggestExternal && storedCase.recommendationType && (
+            <ExternalSuggestionBanner
+              recommendationType={storedCase.recommendationType as "CRITICAL" | "STRATEGIC"}
+              caseTitle={storedCase.title}
+              jobDescription={storedCase.jobDescription || ""}
+            />
+          )}
           <div className="flex items-start gap-4">
             <Avatar className="h-14 w-14">
               <AvatarFallback className="bg-primary/10 text-primary text-lg font-semibold">
