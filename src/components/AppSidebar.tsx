@@ -2,7 +2,6 @@ import {
   LayoutDashboard,
   Briefcase,
   Users,
-  Settings,
   Brain,
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
@@ -29,9 +28,6 @@ const mainNav = [
   { title: "Candidates", url: "/candidates", icon: Users },
 ];
 
-const secondaryNav = [
-  { title: "Settings", url: "/settings", icon: Settings },
-];
 
 export function AppSidebar() {
   const { state } = useSidebar();
@@ -82,30 +78,6 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarSeparator className="mx-3 my-2" />
-
-        <SidebarGroup>
-          {!collapsed && <SidebarGroupLabel className="text-[11px] uppercase tracking-wider text-muted-foreground/70 font-medium px-3 mb-1">Support</SidebarGroupLabel>}
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {secondaryNav.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                    <NavLink
-                      to={item.url}
-                      end
-                      className="hover:bg-accent rounded-lg transition-all duration-150"
-                      activeClassName="bg-accent text-accent-foreground font-medium"
-                    >
-                      <item.icon className="mr-2.5 h-[18px] w-[18px]" />
-                      {!collapsed && <span className="text-[13.5px]">{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
       </SidebarContent>
 
     </Sidebar>
