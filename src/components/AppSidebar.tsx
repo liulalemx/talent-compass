@@ -33,9 +33,7 @@ const mainNav = [
 ];
 
 const secondaryNav = [
-  { title: "Reports", url: "/reports", icon: FileText },
   { title: "Settings", url: "/settings", icon: Settings },
-  { title: "Help & Support", url: "/help", icon: HelpCircle },
 ];
 
 export function AppSidebar() {
