@@ -148,30 +148,6 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-
-        {/* Activity Feed */}
-        <div className="space-y-3">
-          <h2 className="text-base font-medium">Recent Activity</h2>
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-0">
-              {recentActivity.map((act, i) => (
-                <div
-                  key={act.id}
-                  className={`flex items-start gap-3 p-4 ${i < recentActivity.length - 1 ? "border-b border-border/60" : ""}`}
-                >
-                  <div className={`flex h-8 w-8 items-center justify-center rounded-lg shrink-0 ${act.color}`}>
-                    <act.icon className="h-4 w-4" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium">{act.action}</p>
-                    <p className="text-xs text-muted-foreground truncate">{act.detail}</p>
-                    <p className="text-[11px] text-muted-foreground/70 mt-1">{act.time}</p>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   );
