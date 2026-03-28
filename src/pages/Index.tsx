@@ -28,12 +28,16 @@ const urgencyConfig = {
 export default function Dashboard() {
   const [cases, setCases] = useState<StoredHiringCase[]>([]);
   const [totalCandidates, setTotalCandidates] = useState(0);
+  const { query } = useSearch();
 
   useEffect(() => {
     setCases(getCases());
     api.listCandidates().then((list) => setTotalCandidates(list.length)).catch(() => {});
   }, []);
 
+  const filteredCases = cases.filter((c) =>
+    c.title.toLowerCase().includes(query.toLowerCase())
+  );
   const activeCases = cases.filter((c) => c.status !== "draft").length;
 
   return (
