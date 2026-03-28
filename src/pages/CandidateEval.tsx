@@ -114,6 +114,13 @@ export default function CandidateEval() {
       {/* Right panel */}
       <div className="flex-1 overflow-auto p-6 lg:p-8">
         <div className="max-w-2xl space-y-6">
+          {storedCase?.suggestExternal && storedCase.recommendationType && (
+            <ExternalSuggestionBanner
+              recommendationType={storedCase.recommendationType as "CRITICAL" | "STRATEGIC"}
+              caseTitle={storedCase.title}
+              jobDescription={storedCase.jobDescription || ""}
+            />
+          )}
           <div className="flex items-start gap-4">
             <Avatar className="h-14 w-14">
               <AvatarFallback className="bg-primary/10 text-primary text-lg font-semibold">
