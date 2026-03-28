@@ -148,7 +148,7 @@ export default function Candidates() {
                     </p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-xs text-muted-foreground hidden sm:inline">{c.location}</span>
+                    <span className="text-xs text-muted-foreground hidden sm:inline">{c.location || "Internal"}</span>
                     <span className="text-xs text-muted-foreground">{c.years_experience} yrs</span>
                     <Badge variant={c.source === "internal" ? "secondary" : "outline"} className="text-[10px]">
                       {c.source}
