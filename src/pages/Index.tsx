@@ -71,12 +71,10 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Hiring Cases */}
-        <div className="lg:col-span-2 space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-medium">Hiring Cases</h2>
-          </div>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-medium">Hiring Cases</h2>
+        </div>
           <div className="space-y-2.5">
             {hiringCases.map((c) => {
               const st = statusConfig[c.status];
