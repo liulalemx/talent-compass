@@ -80,12 +80,14 @@ export default function CriteriaDef() {
         .map((c) => `${c.name} (Weight: ${c.weight}/10): ${c.description || ""}`)
         .join("\n");
       const fullCriteria = positionTitle ? `Position: ${positionTitle}\n${criteriaStr}` : criteriaStr;
-      const result = await api.rankCandidates(fullCriteria);
+      const result = await api.rankCandidates(fullCriteria, urgency);
       if (id) {
         updateCase(id, {
           status: "scored",
           candidateCount: result.candidate_scores.length,
           candidateResults: result.candidate_scores,
+          suggestExternal: result.suggest_external,
+          recommendationType: result.recommendation_type,
         });
       }
       navigate(`/cases/${id}/candidates`);
