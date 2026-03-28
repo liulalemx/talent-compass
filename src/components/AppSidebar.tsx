@@ -50,7 +50,7 @@ export function AppSidebar() {
           {!collapsed && (
             <div>
               <span className="text-[17px] font-semibold tracking-tight text-foreground">
-                TalentAI
+                Digital Excellence Talent Hub
               </span>
               <p className="text-[11px] text-muted-foreground leading-none mt-0.5">HR Decision Platform</p>
             </div>
