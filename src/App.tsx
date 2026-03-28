@@ -3,8 +3,13 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import { AppLayout } from "@/components/AppLayout";
+import Index from "./pages/Index";
+import CaseCreate from "./pages/CaseCreate";
+import CriteriaDef from "./pages/CriteriaDef";
+import CandidateEval from "./pages/CandidateEval";
+import CandidateCompare from "./pages/CandidateCompare";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -14,11 +19,16 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AppLayout>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/cases/new" element={<CaseCreate />} />
+            <Route path="/cases/:id/criteria" element={<CriteriaDef />} />
+            <Route path="/cases/:id/candidates" element={<CandidateEval />} />
+            <Route path="/cases/:id/compare" element={<CandidateCompare />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AppLayout>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
