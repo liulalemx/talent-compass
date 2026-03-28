@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { api } from "@/lib/api";
+import { addCase } from "@/lib/hiringCaseStore";
 
 interface ChatMsg {
   role: "user" | "ai";
