@@ -1,35 +1,37 @@
 
 
-## Plan: Replace Mock Data with localStorage-Persisted Hiring Cases
+## Plan: Sync Frontend with Updated API
 
-### Overview
-Since there's no backend endpoint for hiring cases, we'll use localStorage to persist cases created through the app flow. The dashboard and hiring cases pages will read from localStorage instead of mock data.
+### Summary
+The backend API has two key changes: (1) `rank-candidates` now accepts an `urgency` parameter and returns `suggest_external` / `recommendation_type` fields, and (2) a new `/api/generate-ad` endpoint exists. The frontend needs to be updated to support urgency input, handle external suggestion responses, and allow generating job ads.
 
 ### Changes
 
-**1. Create a `src/lib/hiringCaseStore.ts` utility**
-- Define a `HiringCase` interface (title, department, status, urgency, candidateCount, createdAt, etc.)
-- Functions: `getCases()`, `addCase(case)`, `updateCase(id, updates)`, `deleteCase(id)`
-- All read/write from `localStorage` key `"hiring_cases"`
-- Seed with empty array on first load (no mock data)
+**1. Update `src/lib/api.ts`**
+- Add `urgency` parameter to `rankCandidates(criteria, urgency)`
+- Update `RankResponse` to include `suggest_external: boolean` and `recommendation_type: "CRITICAL" | "STRATEGIC" | null`
+- Add new `generateAd(title, jd_context)` method returning `{ ad_text: string }`
 
-**2. Update `src/pages/CaseCreate.tsx`**
-- After the criteria flow completes and user proceeds to candidate ranking, save the new case to localStorage via `addCase()` with status `"criteria_defined"` or `"scored"`
+**2. Update `src/pages/CriteriaDef.tsx` — Add urgency slider**
+- Add an urgency slider (1–10, default 5) to the criteria tuning page
+- Pass urgency value to `api.rankCandidates(fullCriteria, urgency)`
+- Store `suggest_external` and `recommendation_type` in the case via `updateCase`
 
-**3. Update `src/pages/Index.tsx` (Dashboard)**
-- Replace `import { hiringCases, candidates } from "@/data/mockData"` with `getCases()` from the store
-- Derive stats (active cases, total candidates) from stored cases
-- Use `api.listCandidates()` for the total candidates count
-- Show empty state when no cases exist
+**3. Update `src/lib/hiringCaseStore.ts`**
+- Add `suggestExternal?: boolean`, `recommendationType?: string` fields to `StoredHiringCase`
 
-**4. Update `src/pages/HiringCases.tsx`**
-- Replace mock data import with `getCases()`
-- Add empty state UI when no cases exist yet
-
-**5. Keep `mockData.ts`** — still used by CriteriaDef chat messages, departments, seniority levels
+**4. Update `src/pages/CandidateEval.tsx` — External suggestion banner**
+- Read `suggestExternal` and `recommendationType` from the stored case
+- When `suggest_external` is true, show a prominent banner:
+  - **CRITICAL**: Red/urgent banner — "No viable internal matches. Immediate external recruitment required."
+  - **STRATEGIC**: Blue/advisory banner — "Internal talent density is low. Consider an external search."
+- Banner includes a "Generate External Job Advertisement" button
+- Clicking it calls `api.generateAd()` with the case title and job description
+- Display the generated ad text in a textarea below the banner with a "Copy to Clipboard" button
 
 ### Technical Details
-- `useState` + `useEffect` to load from localStorage on mount
-- Cases get an auto-generated ID and timestamp when created
-- Status transitions: `draft` → `criteria_defined` → `scored` (set during the create flow)
+- Urgency slider reuses the existing `<Slider>` component already imported in CriteriaDef
+- The generate-ad call uses the existing `post()` helper
+- Copy-to-clipboard uses `navigator.clipboard.writeText()`
+- The external suggestion banner renders above or below the candidate list depending on whether candidates exist
 
