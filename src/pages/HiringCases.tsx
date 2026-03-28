@@ -20,30 +20,39 @@ const urgencyConfig = {
 
 export default function HiringCases() {
   const [cases, setCases] = useState<StoredHiringCase[]>([]);
+  const { query } = useSearch();
 
   useEffect(() => {
     setCases(getCases());
   }, []);
 
+  const filteredCases = cases.filter((c) =>
+    c.title.toLowerCase().includes(query.toLowerCase())
+  );
+
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-[1200px]">
       <h1 className="text-2xl font-semibold tracking-tight">Hiring Cases</h1>
-      {cases.length === 0 ? (
+      {filteredCases.length === 0 ? (
         <Card className="border-0 shadow-sm">
           <CardContent className="p-8 text-center space-y-3">
             <Briefcase className="h-10 w-10 text-muted-foreground/40 mx-auto" />
-            <p className="text-sm text-muted-foreground">No hiring cases yet. Create your first one to get started.</p>
-            <Button asChild variant="outline" className="rounded-xl">
-              <Link to="/cases/new">
-                <Plus className="h-4 w-4" />
-                New Hiring Case
-              </Link>
-            </Button>
+            <p className="text-sm text-muted-foreground">
+              {cases.length === 0 ? "No hiring cases yet. Create your first one to get started." : "No cases match your search."}
+            </p>
+            {cases.length === 0 && (
+              <Button asChild variant="outline" className="rounded-xl">
+                <Link to="/cases/new">
+                  <Plus className="h-4 w-4" />
+                  New Hiring Case
+                </Link>
+              </Button>
+            )}
           </CardContent>
         </Card>
       ) : (
         <div className="flex flex-col gap-3">
-          {cases.map((c) => {
+          {filteredCases.map((c) => {
             const st = statusConfig[c.status];
             const urg = urgencyConfig[c.urgency];
             return (
