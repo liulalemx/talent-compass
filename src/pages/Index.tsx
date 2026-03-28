@@ -5,9 +5,6 @@ import {
   Users,
   Clock,
   ChevronRight,
-  UserCheck,
-  Target,
-  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,12 +24,6 @@ const urgencyConfig = {
   high: { label: "High", className: "text-destructive" },
 };
 
-const recentActivity = [
-  { id: 1, action: "Candidate scored", detail: "Dr. Elena Vasquez — 92/100", time: "2 hours ago", icon: UserCheck, color: "bg-primary/10 text-primary" },
-  { id: 2, action: "Criteria approved", detail: "Senior SW Engineering Manager", time: "Yesterday", icon: Target, color: "bg-accent text-accent-foreground" },
-  { id: 3, action: "New case created", detail: "Head of People Analytics", time: "3 days ago", icon: Briefcase, color: "bg-muted text-muted-foreground" },
-  { id: 4, action: "AI evaluation complete", detail: "8 candidates processed", time: "3 days ago", icon: Sparkles, color: "bg-primary/10 text-primary" },
-];
 
 export default function Dashboard() {
   const activeCases = hiringCases.filter((c) => c.status !== "draft").length;
@@ -80,12 +71,10 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        {/* Hiring Cases */}
-        <div className="lg:col-span-2 space-y-3">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-medium">Hiring Cases</h2>
-          </div>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-medium">Hiring Cases</h2>
+        </div>
           <div className="space-y-2.5">
             {hiringCases.map((c) => {
               const st = statusConfig[c.status];
@@ -149,31 +138,6 @@ export default function Dashboard() {
                 </Card>
               ))}
             </div>
-          </div>
-        </div>
-
-        {/* Activity Feed */}
-        <div className="space-y-3">
-          <h2 className="text-base font-medium">Recent Activity</h2>
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-0">
-              {recentActivity.map((act, i) => (
-                <div
-                  key={act.id}
-                  className={`flex items-start gap-3 p-4 ${i < recentActivity.length - 1 ? "border-b border-border/60" : ""}`}
-                >
-                  <div className={`flex h-8 w-8 items-center justify-center rounded-lg shrink-0 ${act.color}`}>
-                    <act.icon className="h-4 w-4" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium">{act.action}</p>
-                    <p className="text-xs text-muted-foreground truncate">{act.detail}</p>
-                    <p className="text-[11px] text-muted-foreground/70 mt-1">{act.time}</p>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
