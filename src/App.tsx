@@ -5,6 +5,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppLayout } from "@/components/AppLayout";
 import Index from "./pages/Index";
+import HiringCases from "./pages/HiringCases";
+import Candidates from "./pages/Candidates";
 import CaseCreate from "./pages/CaseCreate";
 import CriteriaDef from "./pages/CriteriaDef";
 import CandidateEval from "./pages/CandidateEval";
@@ -22,6 +24,8 @@ const App = () => (
         <AppLayout>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/cases" element={<HiringCases />} />
+            <Route path="/candidates" element={<Candidates />} />
             <Route path="/cases/new" element={<CaseCreate />} />
             <Route path="/cases/:id/criteria" element={<CriteriaDef />} />
             <Route path="/cases/:id/candidates" element={<CandidateEval />} />
