@@ -9,6 +9,7 @@ import { Progress } from "@/components/ui/progress";
 import { Search, GitCompareArrows, MapPin, Briefcase, Clock } from "lucide-react";
 import type { RankedCandidate } from "@/lib/api";
 import { getCase } from "@/lib/hiringCaseStore";
+import ExternalSuggestionBanner from "@/components/ExternalSuggestionBanner";
 
 export default function CandidateEval() {
   const { id } = useParams<{ id: string }>();
