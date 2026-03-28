@@ -1,62 +1,63 @@
 
 
-# TalentAI — AI-Powered HR Decision Support Tool
+## Plan: Connect Frontend to Backend API
 
-## Overview
-A modern, enterprise-grade web application for senior HR managers to evaluate and compare candidates for high-stakes hiring decisions. Clean, minimal design with a neutral blue/grey palette, emphasizing transparency and decision support.
+### Overview
+Replace mock data flow with real API calls to `https://digital-excellence-talent-hub.onrender.com`. The user flow becomes: Enter JD → AI discovery chat → Review parsed criteria → Approve → Rank candidates.
 
-## Design System
-- **Colors**: Neutral greys with blue accents (slate/blue palette), light mode default
-- **Typography**: Clear hierarchy — xl/2xl headers, base body text, muted secondary text
-- **Components**: Cards with subtle shadows, rounded-lg/2xl corners, generous spacing
-- **Style**: Workday/Linear inspired — professional, analytical, trustworthy
+### Architecture
 
-## Pages & Features
+```text
+CaseCreate (JD input)
+  → POST /api/chat-discovery (loop until READY)
+  → POST /api/parse-jd (get criteria)
+  → Navigate to CriteriaDef with criteria in state
+CriteriaDef (review/adjust criteria)
+  → Approve → POST /api/rank-candidates
+  → Navigate to CandidateEval with results in state
+CandidateEval (show ranked candidates)
+```
 
-### 1. Dashboard (Landing Page)
-- Sidebar navigation: Dashboard, Hiring Cases, Candidates, Settings
-- Stats overview cards (Active Cases, Total Candidates, Recently Evaluated)
-- "Create New Hiring Case" primary CTA button
-- Hiring cases list as cards showing role title, department, status badge (Draft/Criteria Defined/Scored), last updated date
+### Changes
 
-### 2. Hiring Case Creation
-- Centered, distraction-free form layout
-- Large textarea for job description input
-- Dropdowns for Department, Seniority Level
-- Hiring urgency selector (Low/Medium/High)
-- "Generate Criteria with AI" primary CTA
+**1. Create `src/lib/api.ts`** — API client module
+- Base URL constant: `https://digital-excellence-talent-hub.onrender.com`
+- `parseJD(jobDescription: string)` → POST `/api/parse-jd`
+- `chatDiscovery(jobDescription: string, history: any[])` → POST `/api/chat-discovery`
+- `rankCandidates(criteria: string)` → POST `/api/rank-candidates`
 
-### 3. Criteria Definition (AI Chat + Criteria Panel)
-- Split layout: left chat interface, right live-updating criteria panel
-- Chat panel with conversational UI, suggested quick-reply chips
-- Criteria panel showing structured list with name, description, weight sliders, type tags (must-have/preferred/behavioral)
-- Weight total indicator (must sum to 100%)
-- "Approve Criteria" button
+**2. Rewrite `CaseCreate.tsx`** — Add discovery chat flow
+- After user enters JD and clicks "Generate Criteria", call `/api/chat-discovery` in a loop
+- Show AI follow-up questions inline (chat UI within the create page)
+- User responds to questions; history accumulates
+- When API returns `{"status": "READY"}`, call `/api/parse-jd` to get structured criteria
+- Navigate to `/criteria` passing parsed criteria + JD via React Router state
+- Remove department/seniority/urgency selects (backend extracts these from JD)
 
-### 4. Candidate Evaluation
-- Top: Role title + summary with filter controls (Internal/External/All, experience range)
-- Left: Sortable candidate table (Name, Role, Source, Score, Rank)
-- Right: Detail panel with summary, strengths, risks, experience, score breakdown per criterion with rationale, progress bars
-- "Why selected" explanation section for transparency
+**3. Rewrite `CriteriaDef.tsx`** — Use real criteria from navigation state
+- Read criteria from `location.state` instead of mock data
+- Keep the weight adjustment sliders and chat UI for refinement
+- On "Approve", call `/api/rank-candidates` with the verified criteria as a string
+- Navigate to candidate eval with ranked results in state
 
-### 5. Comparison View
-- Side-by-side horizontal comparison table
-- Columns = candidates, Rows = criteria
-- Scores with visual emphasis on differences (color coding, bolding)
-- Sticky candidate headers
-- Radar chart comparison
+**4. Rewrite `CandidateEval.tsx`** — Display API-returned candidates
+- Read candidate results from `location.state`
+- Map API response fields (`full_name`, `current_title`, `fit_score`, `tradeoff_reasoning`, `skills`, `years_experience`, `location`) to the UI
+- Remove dependency on mock `candidates` and `criteria` arrays
+- Simplify detail panel to show: fit score, skills, tradeoff reasoning, location, experience
 
-### 6. Job Description Rewrite
-- "Refine Job Description" button triggers modal
-- AI-generated revised description in editable textarea
-- "Apply and Re-run Evaluation" CTA
+**5. Update `CandidateCompare.tsx`** — Adapt to new data shape
+- Read candidates from `location.state`
+- Remove radar chart (no per-criterion scores from API)
+- Show a simpler comparison table with fit_score, skills, and tradeoff reasoning side-by-side
 
-## Mock Data
-- 1 hiring case (Senior Software Engineering Manager, Autonomous Driving)
-- 8 candidates (mix of internal/external) with full scoring data
-- Pre-defined criteria with weights
+**6. Keep mock data for Dashboard/HiringCases**
+- Dashboard and HiringCases pages continue using mock data as a static showcase
+- The real flow starts from "New Hiring Case" → CaseCreate
 
-## Navigation
-- Persistent sidebar with collapsible icon mode
-- Routes: `/` (Dashboard), `/cases/new` (Create), `/cases/:id/criteria` (Criteria), `/cases/:id/candidates` (Evaluation), `/cases/:id/compare` (Comparison)
+### Technical Details
+- API calls use `fetch` directly (no Supabase needed)
+- Loading and error states with toast notifications
+- Navigation state typed with interfaces matching API response shapes
+- Discovery chat uses a message array state, rendered as a chat thread
 
