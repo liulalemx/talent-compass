@@ -111,8 +111,8 @@ export default function CaseCreate() {
       <div className="p-6 lg:p-8 flex justify-center">
         <div className="w-full max-w-2xl space-y-8">
           <div className="space-y-1">
-            <h1 className="text-2xl font-semibold tracking-tight">RapidResolve AI</h1>
-            <p className="text-muted-foreground">Multi-Agent Crisis Talent Acquisition & Decision Intelligence</p>
+            <h1 className="text-2xl font-semibold tracking-tight">Create Hiring Case</h1>
+            <p className="text-muted-foreground">Define the role, requirements, and let AI find the best internal match.</p>
           </div>
           <Card className="border-0 shadow-sm">
             <CardContent className="p-6 lg:p-8 space-y-6">
