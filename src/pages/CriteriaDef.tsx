@@ -149,6 +149,28 @@ export default function CriteriaDef() {
         </Card>
 
         <Card className="border-0 shadow-sm">
+          <CardContent className="p-5 space-y-4">
+            <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Urgency Level (1–10)
+            </Label>
+            <div className="flex items-center gap-4">
+              <Slider
+                min={1}
+                max={10}
+                step={1}
+                value={[urgency]}
+                onValueChange={([val]) => setUrgency(val)}
+                className="flex-1"
+              />
+              <span className="font-bold text-primary min-w-[24px] text-center text-sm">{urgency}</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {urgency > 7 ? "High urgency — external recruitment will be flagged as critical if internal matches are weak." : "Standard urgency — strategic recommendations if internal matches are insufficient."}
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-0 shadow-sm">
           <CardContent className="p-5 space-y-3">
             <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Scoring Criteria & Weights (1–10)
