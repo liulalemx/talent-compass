@@ -9,6 +9,8 @@ export interface StoredHiringCase {
   jobDescription?: string;
   criteria?: any;
   candidateResults?: any[];
+  suggestExternal?: boolean;
+  recommendationType?: "CRITICAL" | "STRATEGIC" | null;
 }
 
 const STORAGE_KEY = "hiring_cases";

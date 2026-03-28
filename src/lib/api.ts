@@ -74,8 +74,11 @@ export const api = {
   chatDiscovery: (job_description: string, history: any[]) =>
     post<DiscoveryResponse>("/api/chat-discovery", { job_description, history }),
 
-  rankCandidates: (criteria: string) =>
-    post<RankResponse>("/api/rank-candidates", { criteria }),
+  rankCandidates: (criteria: string, urgency: number = 5) =>
+    post<RankResponse>("/api/rank-candidates", { criteria, urgency }),
+
+  generateAd: (title: string, jd_context: string) =>
+    post<GenerateAdResponse>("/api/generate-ad", { title, jd_context }),
 
   listCandidates: () =>
     get<ListCandidate[]>("/api/list-candidates"),
