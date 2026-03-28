@@ -19,7 +19,7 @@ export default function HiringCases() {
   return (
     <div className="p-6 lg:p-8 space-y-6 max-w-[1200px]">
       <h1 className="text-2xl font-semibold tracking-tight">Hiring Cases</h1>
-      <div className="space-y-2.5">
+      <div className="flex flex-col gap-3">
         {hiringCases.map((c) => {
           const st = statusConfig[c.status];
           const urg = urgencyConfig[c.urgency];
