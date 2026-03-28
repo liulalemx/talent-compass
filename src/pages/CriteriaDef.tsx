@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CheckCircle2, Loader2, Plus, X } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -152,14 +153,15 @@ export default function CriteriaDef() {
                   placeholder="Criterion name"
                   className="flex-1 border-0 bg-transparent font-semibold text-sm focus-visible:ring-0 px-0"
                 />
-                <Input
-                  type="number"
+                <Slider
                   min={1}
                   max={10}
-                  value={c.weight}
-                  onChange={(e) => updateCriterion(i, "weight", Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))}
-                  className="w-16 text-center rounded-lg font-bold text-primary"
+                  step={1}
+                  value={[c.weight]}
+                  onValueChange={([val]) => updateCriterion(i, "weight", val)}
+                  className="w-32"
                 />
+                <span className="font-bold text-primary min-w-[24px] text-center text-sm">{c.weight}</span>
                 <button
                   onClick={() => removeCriterion(i)}
                   className="text-destructive hover:text-destructive/80 transition-colors p-1"
