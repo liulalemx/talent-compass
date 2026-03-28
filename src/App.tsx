@@ -22,18 +22,20 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AppLayout>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/cases" element={<HiringCases />} />
-            <Route path="/candidates" element={<Candidates />} />
-            <Route path="/cases/new" element={<CaseCreate />} />
-            <Route path="/cases/:id/criteria" element={<CriteriaDef />} />
-            <Route path="/cases/:id/candidates" element={<CandidateEval />} />
-            <Route path="/cases/:id/compare" element={<CandidateCompare />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AppLayout>
+        <SearchProvider>
+          <AppLayout>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/cases" element={<HiringCases />} />
+              <Route path="/candidates" element={<Candidates />} />
+              <Route path="/cases/new" element={<CaseCreate />} />
+              <Route path="/cases/:id/criteria" element={<CriteriaDef />} />
+              <Route path="/cases/:id/candidates" element={<CandidateEval />} />
+              <Route path="/cases/:id/compare" element={<CandidateCompare />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AppLayout>
+        </SearchProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
