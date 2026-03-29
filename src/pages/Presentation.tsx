@@ -225,7 +225,7 @@ function ExampleInputsSlide() {
 
 /* ─── Slide deck ─── */
 
-const slides = [ProblemSlide, InputSlide, ExampleInputsSlide, AIAgentsSlide, BusinessValueSlide];
+const slides = [ProblemSlide, InputSlide, ExampleInputsSlide, AIAgentsSlide, AgentPipelineSlide, BusinessValueSlide];
 
 export default function Presentation() {
   const navigate = useNavigate();
