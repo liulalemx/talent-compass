@@ -2,8 +2,8 @@ import {
   LayoutDashboard,
   Briefcase,
   Users,
-  Brain,
 } from "lucide-react";
+import bmwLogo from "@/assets/bmw-logo.png";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
