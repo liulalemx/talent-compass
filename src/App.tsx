@@ -35,6 +35,7 @@ const App = () => (
               <Route path="/cases/:id/criteria" element={<CriteriaDef />} />
               <Route path="/cases/:id/candidates" element={<CandidateEval />} />
               <Route path="/cases/:id/compare" element={<CandidateCompare />} />
+              <Route path="/presentation" element={<Presentation />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AppLayout>
