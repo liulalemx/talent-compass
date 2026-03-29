@@ -95,10 +95,10 @@ function AIAgentsSlide() {
 /* ─── Slide 4: Business Value ─── */
 function BusinessValueSlide() {
   const values = [
-    { metric: "3×", label: "Faster Hiring", desc: "AI pre-screening reduces time-to-shortlist from weeks to hours." },
-    { metric: "100%", label: "Objective Criteria", desc: "Every candidate scored on the same weighted dimensions — no bias, no guesswork." },
-    { metric: "40%", label: "Less External Spend", desc: "Surface qualified internal candidates before triggering costly external recruitment." },
-    { metric: "∞", label: "Talent Visibility", desc: "Skills across the entire organization become searchable and actionable for the first time." },
+    { metric: "⚡", label: "Faster Hiring", desc: "AI pre-screening drastically cuts time-to-shortlist — no more weeks of manual resume review." },
+    { metric: "⚖️", label: "Objective Criteria", desc: "Every candidate scored on the same weighted dimensions — consistent, transparent, and fair." },
+    { metric: "💰", label: "Lower External Spend", desc: "Surface qualified internal candidates before resorting to costly external recruitment channels." },
+    { metric: "🔭", label: "Talent Visibility", desc: "Skills across the entire organization become searchable and actionable for the first time." },
   ];
   return (
     <div className="flex flex-col h-full bg-gradient-to-br from-[hsl(213,100%,12%)] via-[hsl(213,80%,20%)] to-[hsl(213,100%,30%)] text-white px-[140px] py-[100px]">
