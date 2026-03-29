@@ -51,7 +51,7 @@ function InputSlide() {
             <span className="text-[56px] font-bold text-[hsl(213,100%,45%)] leading-none shrink-0">0{i + 1}</span>
             <div>
               <h3 className="text-[28px] font-semibold mb-[8px]">{inp.label}</h3>
-              <p className="text-[22px] text-[hsl(240,5%,46%)] leading-[1.5]">{inp.detail}</p>
+              <p className="text-[22px] text-[hsl(240,5%,46%)] leading-[1.5] whitespace-pre-line">{inp.detail}</p>
             </div>
           </div>
         ))}
