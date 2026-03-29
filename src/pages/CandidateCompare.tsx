@@ -36,7 +36,7 @@ export default function CandidateCompare() {
     <div className="p-4 lg:p-6 space-y-6 max-w-[1400px]">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" className="rounded-xl" asChild>
-          <Link to="/cases/case-1/candidates" state={{ candidates }}>
+          <Link to={`/cases/${id}/candidates`} state={{ candidates }}>
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
