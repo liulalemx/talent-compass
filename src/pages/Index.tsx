@@ -4,7 +4,7 @@ import {
   Plus,
   Briefcase,
   Users,
-  Clock,
+  CheckCircle,
   ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -64,7 +64,7 @@ export default function Dashboard() {
         {[
           { label: "Active Cases", value: activeCases, icon: Briefcase },
           { label: "Total Candidates", value: totalCandidates, icon: Users },
-          { label: "Avg. Time to Fill", value: "18d", icon: Clock },
+          { label: "Scored Cases", value: cases.filter(c => c.status === "scored").length, icon: CheckCircle },
         ].map((stat) => (
           <Card key={stat.label} className="border-0 shadow-sm">
             <CardContent className="p-5 flex items-center gap-4">
