@@ -3,6 +3,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useSearch } from "@/lib/searchContext";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const { query, setQuery } = useSearch();
