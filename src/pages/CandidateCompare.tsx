@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,11 +11,11 @@ import {
 import type { RankedCandidate } from "@/lib/api";
 
 export default function CandidateCompare() {
+  const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state as { candidates: RankedCandidate[] } | null;
   const candidates = state?.candidates || [];
-
   if (!candidates.length) {
     return (
       <div className="p-6 lg:p-8 flex items-center justify-center h-[calc(100vh-3.5rem)]">
@@ -36,7 +36,7 @@ export default function CandidateCompare() {
     <div className="p-4 lg:p-6 space-y-6 max-w-[1400px]">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" className="rounded-xl" asChild>
-          <Link to="/cases/case-1/candidates" state={{ candidates }}>
+          <Link to={`/cases/${id}/candidates`} state={{ candidates }}>
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
