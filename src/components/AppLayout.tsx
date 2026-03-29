@@ -26,7 +26,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 />
               </div>
             </div>
-            <div />
+            <ThemeToggle />
           </header>
           <main className="flex-1 overflow-auto bg-background">{children}</main>
         </div>

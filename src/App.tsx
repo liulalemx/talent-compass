@@ -40,6 +40,7 @@ const App = () => (
         </SearchProvider>
       </BrowserRouter>
     </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
