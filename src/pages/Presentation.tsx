@@ -6,97 +6,110 @@ import bmwLogo from "@/assets/bmw-logo.png";
 const SLIDE_W = 1920;
 const SLIDE_H = 1080;
 
-/* ─── individual slides ─── */
-
-function TitleSlide() {
+/* ─── Slide 1: Problem ─── */
+function ProblemSlide() {
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-[hsl(213,100%,12%)] via-[hsl(213,80%,20%)] to-[hsl(213,100%,30%)] text-white px-[200px]">
-      <img src={bmwLogo} alt="BMW" className="w-[160px] h-[160px] object-contain mb-[60px] rounded-full" />
-      <h1 className="text-[96px] font-bold tracking-tight leading-none text-center">Talent Scout Desk</h1>
-      <p className="text-[36px] text-white/70 mt-[24px] font-light">AI-Powered HR Decision Platform</p>
-      <div className="mt-[80px] flex items-center gap-[16px] text-[24px] text-white/50">
-        <span>BMW Group</span>
-        <span className="w-[6px] h-[6px] rounded-full bg-white/30" />
-        <span>Internal Hiring Intelligence</span>
+    <div className="flex flex-col h-full bg-gradient-to-br from-[hsl(213,100%,12%)] via-[hsl(213,80%,20%)] to-[hsl(213,100%,30%)] text-white px-[140px] py-[100px]">
+      <div className="flex items-center gap-[20px] mb-[60px]">
+        <img src={bmwLogo} alt="BMW" className="w-[80px] h-[80px] object-contain rounded-full" />
+        <span className="text-[28px] font-semibold opacity-70">Talent Scout Desk</span>
+      </div>
+      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,65%)] mb-[16px]">The Problem</p>
+      <h2 className="text-[72px] font-bold leading-[1.1] mb-[60px]">Internal Hiring<br />Is Broken</h2>
+      <div className="grid grid-cols-3 gap-[32px] flex-1">
+        {[
+          { emoji: "⏱", title: "Slow Cycles", desc: "Manual screening takes weeks — critical roles stay empty while qualified employees sit undiscovered." },
+          { emoji: "🔍", title: "Missed Talent", desc: "Skills and experience buried in HR systems are invisible to hiring managers making decisions." },
+          { emoji: "📊", title: "Subjective Decisions", desc: "No consistent criteria across managers — evaluations vary wildly, leading to poor or biased hires." },
+        ].map((p) => (
+          <div key={p.title} className="bg-white/5 border border-white/10 rounded-[20px] p-[40px]">
+            <span className="text-[48px] block mb-[16px]">{p.emoji}</span>
+            <h3 className="text-[28px] font-semibold mb-[8px]">{p.title}</h3>
+            <p className="text-[20px] text-white/60 leading-[1.5]">{p.desc}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-function ProblemSlide() {
-  const problems = [
-    { emoji: "⏱", title: "Slow Hiring Cycles", desc: "Manual screening of internal candidates takes weeks, delaying critical hires." },
-    { emoji: "🔍", title: "Missed Internal Talent", desc: "Qualified employees are overlooked because their skills aren't visible to recruiters." },
-    { emoji: "📊", title: "Subjective Evaluations", desc: "Criteria and scoring vary between hiring managers, leading to inconsistent decisions." },
-    { emoji: "💸", title: "Unnecessary External Spend", desc: "External recruitment is triggered before fully exploring the internal talent pool." },
+/* ─── Slide 2: Input ─── */
+function InputSlide() {
+  const inputs = [
+    { label: "Job Description", detail: "Free-text role description or structured requirements — the starting point for AI-driven discovery." },
+    { label: "Weighted Criteria", detail: "Evaluation dimensions (technical skills, leadership, cultural fit) with adjustable importance weights." },
+    { label: "Urgency Level", detail: "Time-sensitivity flag that triggers external-search suggestions when internal talent is insufficient." },
+    { label: "Candidate Profiles", detail: "Internal employee data: skills, experience, certifications, past performance, and career trajectory." },
+  ];
+  return (
+    <div className="flex flex-col h-full bg-white text-[hsl(240,10%,10%)] px-[140px] py-[100px]">
+      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,45%)] mb-[16px]">Inputs</p>
+      <h2 className="text-[72px] font-bold leading-[1.1] mb-[70px]">What the System<br />Takes In</h2>
+      <div className="flex-1 grid grid-cols-2 gap-[36px]">
+        {inputs.map((inp, i) => (
+          <div key={inp.label} className="flex gap-[24px] items-start bg-[hsl(213,60%,96%)] rounded-[20px] p-[40px]">
+            <span className="text-[56px] font-bold text-[hsl(213,100%,45%)] leading-none shrink-0">0{i + 1}</span>
+            <div>
+              <h3 className="text-[28px] font-semibold mb-[8px]">{inp.label}</h3>
+              <p className="text-[22px] text-[hsl(240,5%,46%)] leading-[1.5]">{inp.detail}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Slide 3: AI / Agents ─── */
+function AIAgentsSlide() {
+  const steps = [
+    { icon: "💬", title: "AI Discovery Chat", desc: "Conversational agent refines vague job descriptions into structured, actionable requirements." },
+    { icon: "⚙️", title: "Criteria Generation", desc: "LLM analyzes the role and auto-generates weighted evaluation criteria tailored to the position." },
+    { icon: "🧠", title: "Candidate Scoring", desc: "Each candidate is scored against every criterion using AI reasoning — with transparent explanations." },
+    { icon: "📈", title: "Ranking & Comparison", desc: "Aggregated fit scores produce a ranked shortlist. Side-by-side comparison highlights trade-offs." },
   ];
   return (
     <div className="flex flex-col h-full bg-[hsl(240,10%,5%)] text-white px-[140px] py-[100px]">
-      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,65%)] mb-[16px]">The Challenge</p>
-      <h2 className="text-[72px] font-bold leading-[1.1] mb-[80px]">Why Traditional Hiring<br />Falls Short</h2>
-      <div className="grid grid-cols-2 gap-[40px] flex-1">
-        {problems.map((p) => (
-          <div key={p.title} className="bg-white/5 border border-white/10 rounded-[20px] p-[40px] flex gap-[24px]">
-            <span className="text-[48px] shrink-0">{p.emoji}</span>
-            <div>
-              <h3 className="text-[28px] font-semibold mb-[8px]">{p.title}</h3>
-              <p className="text-[22px] text-white/60 leading-[1.5]">{p.desc}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function SolutionSlide() {
-  return (
-    <div className="flex flex-col h-full bg-white text-[hsl(240,10%,10%)] px-[140px] py-[100px]">
-      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,45%)] mb-[16px]">Our Solution</p>
-      <h2 className="text-[72px] font-bold leading-[1.1] mb-[60px]">AI-Assisted Talent<br />Discovery</h2>
-      <div className="flex-1 flex gap-[60px] items-center">
-        <div className="flex-1 space-y-[40px]">
-          {[
-            { step: "01", title: "Describe the Role", desc: "Enter a job description or chat with our AI to refine requirements through guided discovery." },
-            { step: "02", title: "Define & Weight Criteria", desc: "AI generates evaluation criteria. HR tunes weights and urgency before executing the search." },
-            { step: "03", title: "Rank & Compare", desc: "Candidates are scored against weighted criteria with AI-powered trade-off analysis." },
-          ].map((s) => (
-            <div key={s.step} className="flex gap-[24px] items-start">
-              <span className="text-[48px] font-bold text-[hsl(213,100%,45%)] leading-none">{s.step}</span>
-              <div>
-                <h3 className="text-[28px] font-semibold mb-[6px]">{s.title}</h3>
-                <p className="text-[22px] text-[hsl(240,5%,46%)] leading-[1.5]">{s.desc}</p>
+      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,65%)] mb-[16px]">AI & Agents</p>
+      <h2 className="text-[72px] font-bold leading-[1.1] mb-[70px]">How the System<br />Thinks</h2>
+      <div className="flex-1 flex items-center">
+        <div className="flex gap-[24px] w-full">
+          {steps.map((s, i) => (
+            <div key={s.title} className="flex-1 relative">
+              <div className="bg-white/5 border border-white/10 rounded-[20px] p-[36px] h-full flex flex-col">
+                <span className="text-[48px] mb-[16px]">{s.icon}</span>
+                <h3 className="text-[26px] font-semibold mb-[8px]">{s.title}</h3>
+                <p className="text-[20px] text-white/60 leading-[1.5]">{s.desc}</p>
               </div>
+              {i < steps.length - 1 && (
+                <div className="absolute top-1/2 -right-[16px] text-[28px] text-white/30">→</div>
+              )}
             </div>
           ))}
-        </div>
-        <div className="w-[600px] h-[600px] rounded-[32px] bg-gradient-to-br from-[hsl(213,80%,96%)] to-[hsl(213,60%,88%)] flex items-center justify-center">
-          <img src={bmwLogo} alt="BMW" className="w-[200px] h-[200px] object-contain opacity-30" />
         </div>
       </div>
     </div>
   );
 }
 
-function FeaturesSlide() {
-  const features = [
-    { icon: "🤖", title: "AI Discovery Chat", desc: "Interactive conversation to refine job requirements" },
-    { icon: "⚖️", title: "Weighted Criteria", desc: "Customizable scoring dimensions with adjustable weights" },
-    { icon: "📈", title: "Fit Score Ranking", desc: "Candidates ranked by AI with transparent reasoning" },
-    { icon: "🔄", title: "Side-by-Side Compare", desc: "Compare top candidates across all criteria" },
-    { icon: "🚨", title: "External Alerts", desc: "Urgency-aware flags when internal talent is insufficient" },
-    { icon: "🌗", title: "Dark / Light Mode", desc: "Polished UI with full theme support" },
+/* ─── Slide 4: Business Value ─── */
+function BusinessValueSlide() {
+  const values = [
+    { metric: "3×", label: "Faster Hiring", desc: "AI pre-screening reduces time-to-shortlist from weeks to hours." },
+    { metric: "100%", label: "Objective Criteria", desc: "Every candidate scored on the same weighted dimensions — no bias, no guesswork." },
+    { metric: "40%", label: "Less External Spend", desc: "Surface qualified internal candidates before triggering costly external recruitment." },
+    { metric: "∞", label: "Talent Visibility", desc: "Skills across the entire organization become searchable and actionable for the first time." },
   ];
   return (
-    <div className="flex flex-col h-full bg-[hsl(213,100%,12%)] text-white px-[140px] py-[100px]">
-      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,65%)] mb-[16px]">Key Features</p>
-      <h2 className="text-[72px] font-bold leading-[1.1] mb-[80px]">What Makes It Powerful</h2>
-      <div className="grid grid-cols-3 gap-[32px] flex-1">
-        {features.map((f) => (
-          <div key={f.title} className="bg-white/5 border border-white/10 rounded-[20px] p-[36px]">
-            <span className="text-[48px] block mb-[16px]">{f.icon}</span>
-            <h3 className="text-[26px] font-semibold mb-[8px]">{f.title}</h3>
-            <p className="text-[20px] text-white/60 leading-[1.5]">{f.desc}</p>
+    <div className="flex flex-col h-full bg-gradient-to-br from-[hsl(213,100%,12%)] via-[hsl(213,80%,20%)] to-[hsl(213,100%,30%)] text-white px-[140px] py-[100px]">
+      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,65%)] mb-[16px]">Business Value</p>
+      <h2 className="text-[72px] font-bold leading-[1.1] mb-[70px]">Why This Makes<br />Decisions Better</h2>
+      <div className="flex-1 grid grid-cols-4 gap-[32px]">
+        {values.map((v) => (
+          <div key={v.label} className="bg-white/5 border border-white/10 rounded-[20px] p-[40px] flex flex-col items-center text-center">
+            <span className="text-[72px] font-bold text-[hsl(213,100%,65%)] leading-none mb-[16px]">{v.metric}</span>
+            <h3 className="text-[26px] font-semibold mb-[8px]">{v.label}</h3>
+            <p className="text-[20px] text-white/60 leading-[1.5]">{v.desc}</p>
           </div>
         ))}
       </div>
@@ -104,65 +117,9 @@ function FeaturesSlide() {
   );
 }
 
-function ArchitectureSlide() {
-  const layers = [
-    { label: "Frontend", tech: "React · TypeScript · Tailwind · shadcn/ui", color: "hsl(213,100%,45%)" },
-    { label: "State", tech: "React Query · LocalStorage Persistence", color: "hsl(213,80%,55%)" },
-    { label: "AI Backend", tech: "REST API · LLM-powered Scoring & Discovery", color: "hsl(213,60%,65%)" },
-    { label: "Data", tech: "Vector Search · Candidate Database", color: "hsl(213,40%,75%)" },
-  ];
-  return (
-    <div className="flex flex-col h-full bg-white text-[hsl(240,10%,10%)] px-[140px] py-[100px]">
-      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,45%)] mb-[16px]">Architecture</p>
-      <h2 className="text-[72px] font-bold leading-[1.1] mb-[80px]">Technical Stack</h2>
-      <div className="flex-1 flex items-center justify-center">
-        <div className="w-[1200px] space-y-[24px]">
-          {layers.map((l) => (
-            <div
-              key={l.label}
-              className="rounded-[16px] p-[40px] flex items-center justify-between"
-              style={{ backgroundColor: l.color, color: "white" }}
-            >
-              <span className="text-[32px] font-bold">{l.label}</span>
-              <span className="text-[24px] font-light opacity-90">{l.tech}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+/* ─── Slide deck ─── */
 
-function DemoSlide() {
-  return (
-    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-[hsl(213,100%,12%)] via-[hsl(213,80%,20%)] to-[hsl(213,100%,30%)] text-white">
-      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,65%)] mb-[24px]">Live Demo</p>
-      <h2 className="text-[96px] font-bold mb-[40px]">Let's See It in Action</h2>
-      <p className="text-[32px] text-white/60 max-w-[800px] text-center leading-[1.5]">
-        Walk through creating a hiring case, reviewing AI-generated criteria, and comparing ranked candidates.
-      </p>
-    </div>
-  );
-}
-
-function ClosingSlide() {
-  return (
-    <div className="flex flex-col items-center justify-center h-full bg-[hsl(240,10%,5%)] text-white">
-      <img src={bmwLogo} alt="BMW" className="w-[120px] h-[120px] object-contain mb-[48px] rounded-full" />
-      <h2 className="text-[80px] font-bold mb-[24px]">Thank You</h2>
-      <p className="text-[32px] text-white/50 mb-[80px]">Questions & Discussion</p>
-      <div className="flex gap-[40px] text-[22px] text-white/40">
-        <span>Talent Scout Desk</span>
-        <span className="w-[6px] h-[6px] rounded-full bg-white/20 self-center" />
-        <span>BMW Group</span>
-      </div>
-    </div>
-  );
-}
-
-/* ─── slide deck ─── */
-
-const slides = [TitleSlide, ProblemSlide, SolutionSlide, FeaturesSlide, ArchitectureSlide, DemoSlide, ClosingSlide];
+const slides = [ProblemSlide, InputSlide, AIAgentsSlide, BusinessValueSlide];
 
 export default function Presentation() {
   const navigate = useNavigate();
@@ -202,7 +159,6 @@ export default function Presentation() {
     return () => window.removeEventListener("resize", resize);
   }, []);
 
-  // Auto-hide controls in fullscreen
   useEffect(() => {
     if (!isFullscreen) { setShowControls(true); return; }
     let timer: ReturnType<typeof setTimeout>;
@@ -216,7 +172,6 @@ export default function Presentation() {
 
   return (
     <div className="fixed inset-0 bg-black flex items-center justify-center overflow-hidden select-none" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      {/* Slide */}
       <div
         style={{
           width: SLIDE_W,
@@ -234,7 +189,6 @@ export default function Presentation() {
         <SlideComponent />
       </div>
 
-      {/* Controls */}
       <div
         className="fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 transition-opacity duration-300 z-50"
         style={{ opacity: showControls ? 1 : 0 }}

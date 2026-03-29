@@ -26,19 +26,23 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <SearchProvider>
-          <AppLayout>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/cases" element={<HiringCases />} />
-              <Route path="/candidates" element={<Candidates />} />
-              <Route path="/cases/new" element={<CaseCreate />} />
-              <Route path="/cases/:id/criteria" element={<CriteriaDef />} />
-              <Route path="/cases/:id/candidates" element={<CandidateEval />} />
-              <Route path="/cases/:id/compare" element={<CandidateCompare />} />
-              <Route path="/presentation" element={<Presentation />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </AppLayout>
+          <Routes>
+            <Route path="/presentation" element={<Presentation />} />
+            <Route path="*" element={
+              <AppLayout>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/cases" element={<HiringCases />} />
+                  <Route path="/candidates" element={<Candidates />} />
+                  <Route path="/cases/new" element={<CaseCreate />} />
+                  <Route path="/cases/:id/criteria" element={<CriteriaDef />} />
+                  <Route path="/cases/:id/candidates" element={<CandidateEval />} />
+                  <Route path="/cases/:id/compare" element={<CandidateCompare />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </AppLayout>
+            } />
+          </Routes>
         </SearchProvider>
       </BrowserRouter>
         </TooltipProvider>
