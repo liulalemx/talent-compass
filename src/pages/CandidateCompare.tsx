@@ -11,9 +11,9 @@ import {
 import type { RankedCandidate } from "@/lib/api";
 
 export default function CandidateCompare() {
+  const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state as { candidates: RankedCandidate[] } | null;
   const candidates = state?.candidates || [];
 
   if (!candidates.length) {
