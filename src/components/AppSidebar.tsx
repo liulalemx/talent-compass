@@ -2,8 +2,8 @@ import {
   LayoutDashboard,
   Briefcase,
   Users,
-  Brain,
 } from "lucide-react";
+import bmwLogo from "@/assets/bmw-logo.png";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import {
@@ -40,9 +40,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="border-r-0">
       <SidebarHeader className="p-4 pb-6">
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary shadow-sm">
-            <Brain className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <img src={bmwLogo} alt="BMW Logo" className="h-9 w-9 rounded-full object-contain" />
           {!collapsed && (
             <div>
               <span className="text-[17px] font-semibold tracking-tight text-foreground">
