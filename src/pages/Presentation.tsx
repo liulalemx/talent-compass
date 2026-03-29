@@ -92,6 +92,66 @@ function AIAgentsSlide() {
   );
 }
 
+/* ─── Slide: Agent Pipeline ─── */
+function AgentPipelineSlide() {
+  const agents = [
+    {
+      icon: "💬",
+      title: "Chat Discovery Agent",
+      desc: "Extracts detailed information from the user through conversation and generates a concise summary of the job/position description.",
+    },
+    {
+      icon: "⚙️",
+      title: "Criteria Agent",
+      desc: "Takes the summary and generates a structured list of evaluation criteria with importance weights.",
+    },
+    {
+      icon: "🧠",
+      title: "CV Agent",
+      desc: "Evaluates each candidate against the weighted criteria to produce a score from 0–100 for ranking.",
+      details: [
+        "To avoid expensive heavy-weight model calls for every candidate, we added an optimisation layer:",
+        "The summary is embedded via Gemini and used for vector similarity search against pre-embedded candidate profiles.",
+        "Only the top 15 most similar candidates are passed to the full evaluation pipeline.",
+      ],
+    },
+    {
+      icon: "📝",
+      title: "Job Posting Agent",
+      desc: "When internal talent falls short, this agent generates a ready-to-publish job posting based on the full chat context.",
+    },
+  ];
+
+  return (
+    <div className="flex flex-col h-full bg-[hsl(240,10%,5%)] text-white px-[140px] py-[80px]">
+      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,65%)] mb-[16px]">Architecture</p>
+      <h2 className="text-[60px] font-bold leading-[1.1] mb-[50px]">4-Agent Pipeline</h2>
+      <div className="flex-1 grid grid-cols-2 gap-[28px]">
+        {agents.map((a, i) => (
+          <div key={a.title} className="bg-white/5 border border-white/10 rounded-[20px] p-[36px] flex flex-col">
+            <div className="flex items-center gap-[16px] mb-[12px]">
+              <span className="text-[40px]">{a.icon}</span>
+              <span className="text-[14px] font-bold uppercase tracking-[0.15em] px-[12px] py-[4px] rounded-full bg-[hsl(213,100%,45%)] text-white shrink-0">Agent {i + 1}</span>
+            </div>
+            <h3 className="text-[26px] font-semibold mb-[8px]">{a.title}</h3>
+            <p className="text-[19px] text-white/60 leading-[1.5]">{a.desc}</p>
+            {a.details && (
+              <ul className="mt-[12px] space-y-[6px]">
+                {a.details.map((d, j) => (
+                  <li key={j} className="text-[17px] text-white/50 leading-[1.5] flex gap-[8px]">
+                    <span className="text-[hsl(213,100%,65%)] shrink-0">›</span>
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Slide 4: Business Value ─── */
 function BusinessValueSlide() {
   const values = [
@@ -165,7 +225,7 @@ function ExampleInputsSlide() {
 
 /* ─── Slide deck ─── */
 
-const slides = [ProblemSlide, InputSlide, ExampleInputsSlide, AIAgentsSlide, BusinessValueSlide];
+const slides = [ProblemSlide, InputSlide, ExampleInputsSlide, AIAgentsSlide, AgentPipelineSlide, BusinessValueSlide];
 
 export default function Presentation() {
   const navigate = useNavigate();
