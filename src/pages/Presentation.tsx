@@ -117,9 +117,55 @@ function BusinessValueSlide() {
   );
 }
 
+/* ─── Slide 3: Example Inputs ─── */
+function ExampleInputsSlide() {
+  const examples = [
+    {
+      level: "Minimal",
+      color: "hsl(213,100%,45%)",
+      title: "VP — Digital Car Space",
+      text: "Develop and execute the 5-to-10-year roadmap for the business unit, 10+ years experience, experience navigating international markets.",
+    },
+    {
+      level: "Detailed",
+      color: "hsl(160,70%,40%)",
+      title: "Senior AI Innovation Engineer – Open Innovation",
+      text: "5+ yrs Software Engineering / Data Science · Python (FastAPI), TypeScript/React · LLM orchestration & fine-tuning · AWS/Azure, Docker, K8s · Master's / PhD in CS or AI · Fluent English, German preferred.",
+    },
+    {
+      level: "Expert",
+      color: "hsl(280,60%,50%)",
+      title: "Global VP, Solid-State Battery Scaling & AI Quality Systems",
+      text: "PhD Materials Science / Electrochemistry · 15+ yrs automotive/high-tech mfg · Lab→GWh scale-up · AI/ML pipelines in factory settings · €500M+ CapEx leadership · English + German mandatory, Mandarin desired.",
+    },
+  ];
+  return (
+    <div className="flex flex-col h-full bg-white text-[hsl(240,10%,10%)] px-[140px] py-[100px]">
+      <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,45%)] mb-[16px]">Real Examples</p>
+      <h2 className="text-[72px] font-bold leading-[1.1] mb-[60px]">Inputs at Every<br />Level of Detail</h2>
+      <div className="flex-1 flex flex-col gap-[28px]">
+        {examples.map((ex) => (
+          <div key={ex.title} className="flex gap-[28px] items-start bg-[hsl(213,60%,96%)] rounded-[20px] p-[36px] flex-1">
+            <span
+              className="text-[16px] font-bold uppercase tracking-[0.15em] px-[16px] py-[6px] rounded-full shrink-0"
+              style={{ background: ex.color, color: "white" }}
+            >
+              {ex.level}
+            </span>
+            <div className="min-w-0">
+              <h3 className="text-[28px] font-semibold mb-[6px]">{ex.title}</h3>
+              <p className="text-[22px] text-[hsl(240,5%,46%)] leading-[1.5]">{ex.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Slide deck ─── */
 
-const slides = [ProblemSlide, InputSlide, AIAgentsSlide, BusinessValueSlide];
+const slides = [ProblemSlide, InputSlide, ExampleInputsSlide, AIAgentsSlide, BusinessValueSlide];
 
 export default function Presentation() {
   const navigate = useNavigate();
