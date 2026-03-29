@@ -12,6 +12,7 @@ import CaseCreate from "./pages/CaseCreate";
 import CriteriaDef from "./pages/CriteriaDef";
 import CandidateEval from "./pages/CandidateEval";
 import CandidateCompare from "./pages/CandidateCompare";
+import Presentation from "./pages/Presentation";
 import NotFound from "./pages/NotFound";
 import { ThemeProvider } from "next-themes";
 
