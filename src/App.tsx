@@ -28,7 +28,7 @@ const App = () => (
         <SearchProvider>
           <Routes>
             <Route path="/presentation" element={<Presentation />} />
-            <Route element={<AppLayout><AppRoutes /></AppLayout>}>
+            <Route element={<AppLayoutWrapper />}>
               <Route path="/" element={<Index />} />
               <Route path="/cases" element={<HiringCases />} />
               <Route path="/candidates" element={<Candidates />} />
