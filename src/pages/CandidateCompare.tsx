@@ -15,7 +15,7 @@ export default function CandidateCompare() {
   const location = useLocation();
   const navigate = useNavigate();
   const state = location.state as { candidates: RankedCandidate[] } | null;
-
+  const candidates = state?.candidates || [];
   if (!candidates.length) {
     return (
       <div className="p-6 lg:p-8 flex items-center justify-center h-[calc(100vh-3.5rem)]">
