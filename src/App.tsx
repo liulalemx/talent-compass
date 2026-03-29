@@ -18,6 +18,10 @@ import { ThemeProvider } from "next-themes";
 
 const queryClient = new QueryClient();
 
+function AppLayoutWrapper() {
+  return <AppLayout><Outlet /></AppLayout>;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
