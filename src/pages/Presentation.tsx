@@ -39,7 +39,7 @@ function InputSlide() {
     { label: "Job Description", detail: "Free-text role description or structured requirements — the starting point for AI-driven discovery." },
     { label: "Weighted Criteria", detail: "Evaluation dimensions (technical skills, leadership, cultural fit) with adjustable importance weights." },
     { label: "Urgency Level", detail: "Time-sensitivity flag that triggers external-search suggestions when internal talent is insufficient." },
-    { label: "Candidate Profiles", detail: "Internal employee data: skills, experience, certifications, past performance, and career trajectory." },
+    { label: "Candidate Profiles", detail: "Internal employee data: skills, experience, certifications, past performance, and career trajectory.\nExternal Candidate data: skills, experience, certifications, past performance, and career trajectory." },
   ];
   return (
     <div className="flex flex-col h-full bg-white text-[hsl(240,10%,10%)] px-[140px] py-[100px]">
@@ -51,7 +51,7 @@ function InputSlide() {
             <span className="text-[56px] font-bold text-[hsl(213,100%,45%)] leading-none shrink-0">0{i + 1}</span>
             <div>
               <h3 className="text-[28px] font-semibold mb-[8px]">{inp.label}</h3>
-              <p className="text-[22px] text-[hsl(240,5%,46%)] leading-[1.5]">{inp.detail}</p>
+              <p className="text-[22px] text-[hsl(240,5%,46%)] leading-[1.5] whitespace-pre-line">{inp.detail}</p>
             </div>
           </div>
         ))}
