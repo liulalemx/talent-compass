@@ -15,7 +15,7 @@ function ProblemSlide() {
         <span className="text-[28px] font-semibold opacity-70">Talent Scout Desk</span>
       </div>
       <p className="text-[22px] font-semibold tracking-[0.2em] uppercase text-[hsl(213,100%,65%)] mb-[16px]">The Problem</p>
-      <h2 className="text-[72px] font-bold leading-[1.1] mb-[60px]">Internal Hiring<br />Is Broken</h2>
+      <h2 className="text-[72px] font-bold leading-[1.1] mb-[60px]">Hiring Is Broken</h2>
       <div className="grid grid-cols-3 gap-[32px] flex-1">
         {[
           { emoji: "⏱", title: "Slow Cycles", desc: "Manual screening takes weeks — critical roles stay empty while qualified employees sit undiscovered." },
