@@ -28,20 +28,16 @@ const App = () => (
         <SearchProvider>
           <Routes>
             <Route path="/presentation" element={<Presentation />} />
-            <Route path="*" element={
-              <AppLayout>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/cases" element={<HiringCases />} />
-                  <Route path="/candidates" element={<Candidates />} />
-                  <Route path="/cases/new" element={<CaseCreate />} />
-                  <Route path="/cases/:id/criteria" element={<CriteriaDef />} />
-                  <Route path="/cases/:id/candidates" element={<CandidateEval />} />
-                  <Route path="/cases/:id/compare" element={<CandidateCompare />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </AppLayout>
-            } />
+            <Route element={<AppLayout><AppRoutes /></AppLayout>}>
+              <Route path="/" element={<Index />} />
+              <Route path="/cases" element={<HiringCases />} />
+              <Route path="/candidates" element={<Candidates />} />
+              <Route path="/cases/new" element={<CaseCreate />} />
+              <Route path="/cases/:id/criteria" element={<CriteriaDef />} />
+              <Route path="/cases/:id/candidates" element={<CandidateEval />} />
+              <Route path="/cases/:id/compare" element={<CandidateCompare />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
           </Routes>
         </SearchProvider>
       </BrowserRouter>
