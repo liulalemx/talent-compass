@@ -1,24 +1,35 @@
 
 
-## Plan: Add Light/Dark Mode Toggle
+## Plan: Fix Presentation Layout & Restructure Slides
 
-### Overview
-Add a theme toggle button to the header bar. The project already has `next-themes` installed and dark mode CSS variables defined in `index.css`. Just need to wire up the `ThemeProvider` and add a toggle.
+### Issue
+The `/presentation` route is inside `<AppLayout>`, which wraps it with the sidebar and header. The presentation needs to render standalone.
 
-### Steps
+### Slide Restructure
+Replace the current 7 slides with 4 slides matching the required format (20 seconds each):
 
-1. **`src/App.tsx`** — Wrap the app with `ThemeProvider` from `next-themes`
-   - Add `<ThemeProvider attribute="class" defaultTheme="system" enableSystem>` around the existing tree
+1. **Problem** — What Talent Scout Desk is and why it matters (slow internal hiring, missed talent, subjective evaluations)
+2. **Input** — Real meaningful inputs the system takes (job description, weighted criteria, urgency level, candidate profiles/skills data)
+3. **AI/Agents** — System logic: AI discovery chat → criteria generation → LLM-powered scoring → ranked fit scores with reasoning
+4. **Business Value** — Why this makes decisions better (faster hiring cycles, data-driven objectivity, reduced external spend, internal talent visibility)
 
-2. **`src/components/ThemeToggle.tsx`** — Create a new component
-   - Sun/Moon icon button using `useTheme()` from `next-themes`
-   - Cycles between light and dark modes on click
+### Technical Changes
 
-3. **`src/components/AppLayout.tsx`** — Add the `ThemeToggle` to the header
-   - Place it in the right side of the header bar (replacing the empty `<div />`)
+1. **`src/App.tsx`** — Move the `/presentation` route outside `<AppLayout>` so it renders without sidebar/header:
+   ```tsx
+   <BrowserRouter>
+     <SearchProvider>
+       <Routes>
+         <Route path="/presentation" element={<Presentation />} />
+         <Route path="*" element={
+           <AppLayout>
+             <Routes>...</Routes>
+           </AppLayout>
+         } />
+       </Routes>
+     </SearchProvider>
+   </BrowserRouter>
+   ```
 
-### Technical Notes
-- Dark mode variables already exist in `index.css` under `.dark`
-- Tailwind is configured with `darkMode: ["class"]` — compatible with next-themes
-- The Sonner toaster already uses `useTheme` so it will automatically adapt
+2. **`src/pages/Presentation.tsx`** — Replace all 7 slide components with 4 new ones matching the required structure. Keep the existing navigation/fullscreen infrastructure.
 
