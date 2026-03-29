@@ -4,7 +4,7 @@ import {
   Plus,
   Briefcase,
   Users,
-  Clock,
+  CheckCircle,
   ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
