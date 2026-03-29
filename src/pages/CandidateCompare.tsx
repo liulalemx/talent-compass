@@ -14,7 +14,7 @@ export default function CandidateCompare() {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
-  const candidates = state?.candidates || [];
+  const state = location.state as { candidates: RankedCandidate[] } | null;
 
   if (!candidates.length) {
     return (
