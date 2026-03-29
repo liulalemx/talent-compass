@@ -13,11 +13,13 @@ import CriteriaDef from "./pages/CriteriaDef";
 import CandidateEval from "./pages/CandidateEval";
 import CandidateCompare from "./pages/CandidateCompare";
 import NotFound from "./pages/NotFound";
+import { ThemeProvider } from "next-themes";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
     <TooltipProvider>
       <Toaster />
       <Sonner />
